@@ -15,12 +15,12 @@ class Rule
     /**
      * @var array
      */
-    protected static $DEFAULT_ATTRIBS = array(
+    protected static $DEFAULT_ATTRIBS = [
         'sufficient' => false,
         'skipEmpty'  => false,
         'constraint' => null,
         'error'      => null,
-    );
+    ];
 
     /**
      * @var Profile
@@ -118,7 +118,7 @@ class Rule
 
         // required, simple
         if (is_string($definition) || is_callable($definition)) {
-            $definition = array('constraint' => $definition);
+            $definition = ['constraint' => $definition];
         }
 
         // init empty to reduce isset checks..
@@ -144,8 +144,8 @@ class Rule
             $method = 'rule'. array_shift($args);
             $found = false;
             foreach ($this->dataFilter->getPredefinedRuleClasses() as $className) {
-                if (is_callable(array($className, $method)) && method_exists($className, $method)) {
-                    $definition['constraint'] = call_user_func_array(array($className, $method), $args);
+                if (is_callable([$className, $method]) && method_exists($className, $method)) {
+                    $definition['constraint'] = call_user_func_array([$className, $method], $args);
                     $found = true;
                     break;
                 }
@@ -228,7 +228,7 @@ class Rule
         if (!$attrib) {
             $attrib = $this->attrib;
         }
-        $formatData = array('rule' => $this->name);
+        $formatData = ['rule' => $this->name];
         if ($attrib) {
             $formatData['attrib'] = $attrib->getName();
         }

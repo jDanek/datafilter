@@ -16,18 +16,18 @@ class Attribute extends Filterable
     /**
      * @var array
      */
-    protected static $DEFAULT_ATTRIBS = array(
+    protected static $DEFAULT_ATTRIBS = [
         'required'       => false,
         'matchAny'       => false,
         'default'        => null,
         'missing'        => null,
         'error'          => null,
-        'rules'          => array(),
-        'dependent'      => array(),
-        'dependentRegex' => array(),
-        'preFilters'     => array(),
-        'postFilters'    => array(),
-    );
+        'rules'          => [],
+        'dependent'      => [],
+        'dependentRegex' => [],
+        'preFilters'     => [],
+        'postFilters'    => [],
+    ];
 
     /**
      * @var Profile
@@ -105,11 +105,11 @@ class Attribute extends Filterable
     {
         $this->name = $name;
         $this->dataFilter = $dataFilter;
-        $this->rules = array();
-        $this->dependent = array();
-        $this->dependentRegex = array();
-        $this->preFilters = array();
-        $this->postFilters = array();
+        $this->rules = [];
+        $this->dependent = [];
+        $this->dependentRegex = [];
+        $this->preFilters = [];
+        $this->postFilters = [];
 
         // no definition
         if (is_null($definition)) {
@@ -131,14 +131,14 @@ class Attribute extends Filterable
 
             // from string or callable (simple, optioanl)
             if (is_string($definition) || is_callable($definition)) {
-                $definition = array('rules' => array('default' => $definition));
+                $definition = ['rules' => ['default' => $definition]];
             }
 
             // init empty to reduce isset checks..
             $definition = array_merge(self::$DEFAULT_ATTRIBS, $definition);
 
             // set attribs
-            foreach (array('required', 'matchAny', 'noFilters', 'default', 'dependent', 'dependentRegex', 'missing', 'error') as $k) {
+            foreach (['required', 'matchAny', 'noFilters', 'default', 'dependent', 'dependentRegex', 'missing', 'error'] as $k) {
                 if (isset($definition[$k])) {
                     $this->$k = $definition[$k];
                 }
@@ -364,9 +364,9 @@ class Attribute extends Filterable
     public function getMissingText()
     {
         $missing = $this->missing ?: $this->dataFilter->getMissingTemplate();
-        return Util::formatString($missing, array(
+        return Util::formatString($missing, [
             'attrib' => $this->name
-        ));
+        ]);
     }
 
     /**

@@ -28,7 +28,7 @@ class ProfileGroup
      */
     public function __construct(array $profiles)
     {
-        $this->profiles = array();
+        $this->profiles = [];
         foreach ($profiles as $profileName => $profileDef) {
             $this->addProfile($profileName, $profileDef);
         }

@@ -353,12 +353,12 @@ class Result
      */
     public function check($data)
     {
-        $this->validAttribs   = array();
-        $this->invalidAttribs = array();
-        $this->missingAttribs = array();
-        $this->unknownAttribs = array();
-        $requiredDependent    = array();
-        $seenAttrib           = array();
+        $this->validAttribs   = [];
+        $this->invalidAttribs = [];
+        $this->missingAttribs = [];
+        $this->unknownAttribs = [];
+        $requiredDependent    = [];
+        $seenAttrib           = [];
 
         foreach (Util::flatten($data) as $attribName => $value) {
             $attrib = $this->dataFilter->getAttrib($attribName);
@@ -391,12 +391,12 @@ class Result
 
             // successfull check
             if ($attrib->check($value)) {
-                $this->validAttribs[$attribName] = array(
+                $this->validAttribs[$attribName] = [
                     'value'  => $attrib->useFilters()
                         ? $this->dataFilter->applyFilter('post', $attrib->applyFilter('post', $value))
                         : $value,
                     'attrib' => &$attrib
-                );
+                ];
 
                 // determine possible dependents
                 $attrib->determineDependents($value, $requiredDependent);
@@ -404,11 +404,11 @@ class Result
 
             // checks failed
             else {
-                $this->invalidAttribs[$attribName] = array(
+                $this->invalidAttribs[$attribName] = [
                     'value'  => $value,
                     'attrib' => &$attrib,
                     'error'  => $attrib->getError()
-                );
+                ];
             }
         }
 
@@ -438,10 +438,10 @@ class Result
                         continue;
                     }
                 }
-                $this->missingAttribs[$attribName] = array(
+                $this->missingAttribs[$attribName] = [
                     'attrib' => &$attrib,
                     'error'  => $attrib->getMissingText()
-                );
+                ];
             }
         }
 

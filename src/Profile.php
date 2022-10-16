@@ -37,7 +37,7 @@ $df = new \DataFilter\Profile([
 
                 // user defined callback (callable)
                 'someCallback' => [
-                    'constraint' => array('\\MyClass', 'myMethod'),
+                    'constraint' => ['\\MyClass', 'myMethod'],
                     'error'      => 'Something is wrong with :attrib:',
 
                     // if this rule matches -> no other is required
@@ -108,12 +108,12 @@ $df = new \DataFilter\Profile([
 
     // global pre filters to be applied on all inputs -> run before
     'preFilters' => [
-        array('\\MyClass', 'filterMethod'),
+        ['\\MyClass', 'filterMethod'],
     ],
 
     // global post filters to be applied on all inputs (including unknown but not invalid)
     'postFilters' => [
-        array('\\MyClass', 'filterMethod'),
+        ['\\MyClass', 'filterMethod'],
     ]
 
 ]);
@@ -160,16 +160,16 @@ class Profile extends Filterable
     /**
      * @var array
      */
-    protected $predefinedRuleClasses = array(
-        '\\DataFilter\\PredefinedRules\\Basic'
-    );
+    protected $predefinedRuleClasses = [
+        PredefinedRules\Basic::class
+    ];
 
     /**
      * @var array
      */
-    protected $predefinedFilterClasses = array(
-        '\\DataFilter\\PredefinedFilters\\Basic'
-    );
+    protected $predefinedFilterClasses = [
+        PredefinedFilters\Basic::class
+    ];
 
     /**
      * @var string
@@ -193,7 +193,7 @@ class Profile extends Filterable
      *
      * @param array  $definition  Optional definition
      */
-    public function __construct($definition = array())
+    public function __construct($definition = [])
     {
         if (isset($definition['errorTemplate'])) {
             $this->errorTemplate = $definition['errorTemplate'];
@@ -201,7 +201,7 @@ class Profile extends Filterable
         if (isset($definition['missingTemplate'])) {
             $this->missingTemplate = $definition['missingTemplate'];
         }
-        foreach (array('ruleClasses', 'filterClasses') as $var) {
+        foreach (['ruleClasses', 'filterClasses'] as $var) {
             if (isset($definition[$var])) {
                 $accessor = 'predefined'. ucfirst($var);
                 foreach ($definition[$var] as $addClass) {
@@ -221,7 +221,7 @@ class Profile extends Filterable
         } elseif (isset($definition['attributes'])) {
             $this->setAttribs($definition['attributes']);
         } else {
-            $this->attribs = array();
+            $this->attribs = [];
         }
     }
 

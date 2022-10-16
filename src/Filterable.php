@@ -32,19 +32,19 @@ abstract class Filterable
     public function addFilters($position, $filters)
     {
         // oops, invalid position
-        if (!in_array($position, array('pre', 'post'))) {
+        if (!in_array($position, ['pre', 'post'])) {
             throw new \InvalidArgumentException("Cannot add filters to '$position'. Use 'pre' or 'post'");
         }
 
         // single filter
         if (is_callable($filters)) {
-            $filters = array($filters);
+            $filters = [$filters];
         }
 
         // determine accessor
         $var = $position. 'Filters';
         if (!$this->$var) {
-            $this->$var = array();
+            $this->$var = [];
         }
 
         // add all filters
@@ -54,7 +54,7 @@ abstract class Filterable
             if (is_callable($filter) && is_array($filter)) { // && !($filter instanceof \Closure)) {
                 $cb = $filter;
                 $filter = function($in) use($cb) {
-                    return call_user_func_array($cb, array($in));
+                    return call_user_func_array($cb, [$in]);
                 };
             }
 
@@ -64,12 +64,12 @@ abstract class Filterable
                 $df = $this instanceof Profile ? $this : $this->dataFilter;
                 $foundFilter = false;
                 $args = $this instanceof Profile
-                    ? array(null, $this)               // data filter
-                    : array($this, $this->dataFilter); // attribute
+                    ? [null, $this]               // data filter
+                    : [$this, $this->dataFilter]; // attribute
                 foreach ($df->getPredefinedFilterClasses() as $className) {
                     if (is_callable($className, $method) && method_exists($className, $method)) {
                         $foundFilter = true;
-                        $filter = call_user_func_array(array($className, $method), $args);
+                        $filter = call_user_func_array([$className, $method], $args);
                         break;
                     }
                 }
@@ -94,8 +94,8 @@ abstract class Filterable
             // convert oldschool filter to closure
             if (!($filter instanceof \Closure)) {
                 $args = $this instanceof Profile
-                    ? array(null, $this)               // data filter
-                    : array($this, $this->dataFilter); // attribute
+                    ? [null, $this]               // data filter
+                    : [$this, $this->dataFilter]; // attribute
                 $filter =  call_user_func_array($filter, $args);
             }
 
@@ -142,7 +142,7 @@ abstract class Filterable
     public function applyFilter($position, $input)
     {
         // oops, invalid position
-        if (!in_array($position, array('pre', 'post'))) {
+        if (!in_array($position, ['pre', 'post'])) {
             throw new \InvalidArgumentException("Cannot add filters to '$position'. Use 'pre' or 'post'");
         }
 
