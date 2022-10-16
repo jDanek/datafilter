@@ -42,9 +42,9 @@ class ProfileGroup
      */
     public function addProfile($profileName, $profileDef)
     {
-        $this->profiles[$profileName] = $profileDef instanceof \DataFilter\Profile
+        $this->profiles[$profileName] = $profileDef instanceof Profile
             ? $profileDef
-            : new \DataFilter\Profile($profileDef);
+            : new Profile($profileDef);
     }
 
     /**
@@ -69,7 +69,7 @@ class ProfileGroup
      * @param array   $data         The data to be parsed
      * @param string  $profileName  Optional: profile name to use
      *
-     * @return \DataFilter\Result
+     * @return Result
      *
      * @throws \InvalidArgumentException
      */
@@ -103,7 +103,7 @@ class ProfileGroup
      * Returns last result of the current profile
      * @param string  $arg2  Optional: profile name to use
      *
-     * @return \DataFilter\Result
+     * @return Result
      *
      * @throws \InvalidArgumentException
      */

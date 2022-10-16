@@ -2,8 +2,6 @@
 
 namespace DataFilter;
 
-use \DataFilter\Util;
-
 /**
  * Data attribute
  *
@@ -16,7 +14,7 @@ class Result
 {
 
     /**
-     * @var \DataFilter\Profile
+     * @var Profile
      */
     protected $dataFilter;
 
@@ -45,9 +43,9 @@ class Result
      *
      * @param string                $name        Name of the attrib (unique per data filter)
      * @param mixed                 $definition  The defnition (containing rule and stuff)
-     * @param \DataFilter\Profile   $dataFilter  Parental data filter
+     * @param Profile $dataFilter  Parental data filter
      */
-    public function __construct(\DataFilter\Profile &$dataFilter)
+    public function __construct(Profile &$dataFilter)
     {
         $this->dataFilter = $dataFilter;
     }
@@ -258,7 +256,7 @@ class Result
      *
      * @param string  $attribName  Name of the attrib
      *
-     * @return \DataFilter\Attribute
+     * @return Attribute
      */
     public function getAttrib($attribName)
     {

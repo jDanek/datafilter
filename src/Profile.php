@@ -182,7 +182,7 @@ class Profile extends Filterable
     protected $missingTemplate = self::DEFAULT_MISSING;
 
     /**
-     * @var \DataFilter\Result
+     * @var Result
      */
     protected $lastResult;
 
@@ -230,7 +230,7 @@ class Profile extends Filterable
      *
      * @param string  $jsonFile  The JSON file
      *
-     * @return \DataFilter\Profile
+     * @return Profile
      *
      * @throws \RuntimeException
      */
@@ -247,7 +247,7 @@ class Profile extends Filterable
         if (!$json) {
             throw new \RuntimeException("Could not parse JSON from '$jsonFile'");
         }
-        return new \DataFilter\Profile($json);
+        return new Profile($json);
     }
 
 
@@ -271,13 +271,13 @@ class Profile extends Filterable
      * @param string  $attribName        Name of the attrib
      * @param mixed   $attribDefinition  Attrib/rule definition or \DataFilter\Attribute object
      *
-     * @return \DataFilter\Attribute
+     * @return Attribute
      */
     public function setAttrib($attribName, $attribDefinition = null)
     {
-        $this->attribs[$attribName] = is_object($attribDefinition) && $attribDefinition instanceof \DataFilter\Attribute
+        $this->attribs[$attribName] = is_object($attribDefinition) && $attribDefinition instanceof Attribute
             ? $attribDefinition
-            : new \DataFilter\Attribute($attribName, $attribDefinition, $this);
+            : new Attribute($attribName, $attribDefinition, $this);
         return $this->attribs[$attribName];
     }
 
@@ -296,7 +296,7 @@ class Profile extends Filterable
      *
      * @param string  $attribName  Name of attrib
      *
-     * @return \DataFilter\Attribute
+     * @return Attribute
      */
     public function getAttrib($attribName)
     {
@@ -363,7 +363,7 @@ class Profile extends Filterable
     /**
      * Returns the last check result
      *
-     * @return \DataFilter\Result
+     * @return Result
      */
     public function getLastResult()
     {
@@ -379,7 +379,7 @@ class Profile extends Filterable
      */
     public function run($data)
     {
-        $this->lastResult = new \DataFilter\Result($this);
+        $this->lastResult = new Result($this);
         $this->lastResult->check($data);
         return $this->lastResult;
     }

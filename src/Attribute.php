@@ -2,8 +2,6 @@
 
 namespace DataFilter;
 
-use \DataFilter\Util;
-
 /**
  * Data attribute
  *
@@ -32,7 +30,7 @@ class Attribute extends Filterable
     );
 
     /**
-     * @var \DataFilter\Profile
+     * @var Profile
      */
     protected $dataFilter;
 
@@ -87,7 +85,7 @@ class Attribute extends Filterable
     protected $dependentRegex;
 
     /**
-     * @var \DataFilter\Rule
+     * @var Rule
      */
     protected $failedRule;
 
@@ -101,9 +99,9 @@ class Attribute extends Filterable
      *
      * @param string                $name        Name of the attrib (unique per data filter)
      * @param mixed                 $definition  The defnition (containing rule and stuff)
-     * @param \DataFilter\Profile   $dataFilter  Parental data filter
+     * @param Profile $dataFilter  Parental data filter
      */
-    public function __construct($name, $definition, \DataFilter\Profile &$dataFilter)
+    public function __construct($name, $definition, Profile &$dataFilter)
     {
         $this->name = $name;
         $this->dataFilter = $dataFilter;
@@ -173,13 +171,13 @@ class Attribute extends Filterable
      * @param string  $ruleName  Name of the rule (unique per attribute)
      * @param mixed   $rule      the rule definition or a \DataFilter\Rule object
      *
-     * @return \DataFilter\Rule
+     * @return Rule
      */
     public function setRule($ruleName, $definition)
     {
-        $this->rules[$ruleName] = is_object($definition) && $definition instanceof \DataFilter\Rule
+        $this->rules[$ruleName] = is_object($definition) && $definition instanceof Rule
             ? $definition
-            : new \DataFilter\Rule($ruleName, $definition, $this, $this->dataFilter);
+            : new Rule($ruleName, $definition, $this, $this->dataFilter);
         return $this->rules[$ruleName];
     }
 
@@ -198,7 +196,7 @@ class Attribute extends Filterable
      *
      * @param string  $ruleName  Name of the rule (unique per attribute)
      *
-     * @return \DataFilter\Rule
+     * @return Rule
      */
     public function getRule($ruleName)
     {

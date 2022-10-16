@@ -2,8 +2,6 @@
 
 namespace DataFilter;
 
-use \DataFilter\Util;
-
 /**
  * Data attribute
  *
@@ -25,12 +23,12 @@ class Rule
     );
 
     /**
-     * @var \DataFilter\Profile
+     * @var Profile
      */
     protected $dataFilter;
 
     /**
-     * @var \DataFilter\Attribute
+     * @var Attribute
      */
     protected $attrib;
 
@@ -79,11 +77,11 @@ class Rule
      *
      * @param string                $name        Name of the attrib (unique per data filter)
      * @param mixed                 $definition  The rule definition
-     * @param \DataFilter\Profile   $dataFilter  Parental data filter
+     * @param Profile $dataFilter  Parental data filter
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($name, $definition, \DataFilter\Attribute &$attribute, \DataFilter\Profile &$dataFilter)
+    public function __construct($name, $definition, Attribute &$attribute, Profile &$dataFilter)
     {
         $this->name = $name;
         $this->attrib = $attribute;
@@ -222,7 +220,7 @@ class Rule
      *
      * @return string
      */
-    public function getError(\DataFilter\Attribute $attrib = null)
+    public function getError(Attribute $attrib = null)
     {
         if ($this->error === false) {
             return null;

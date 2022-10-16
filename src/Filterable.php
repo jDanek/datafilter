@@ -61,9 +61,9 @@ abstract class Filterable
             // from string (predefined filter)
             elseif (is_string($filter)) {
                 $method = 'filter'. $filter;
-                $df = $this instanceof \DataFilter\Profile ? $this : $this->dataFilter;
+                $df = $this instanceof Profile ? $this : $this->dataFilter;
                 $foundFilter = false;
-                $args = $this instanceof \DataFilter\Profile
+                $args = $this instanceof Profile
                     ? array(null, $this)               // data filter
                     : array($this, $this->dataFilter); // attribute
                 foreach ($df->getPredefinedFilterClasses() as $className) {
@@ -74,7 +74,7 @@ abstract class Filterable
                     }
                 }
                 if (!$foundFilter) {
-                    $filterName = $this instanceof \DataFilter\Profile
+                    $filterName = $this instanceof Profile
                         ? 'global '. $position. '-filter'
                         : 'rule "'. $this->name. '", attrib "'. $this->attrib->getName(). '"'
                             . ' as '. $position. '-filter';
@@ -93,7 +93,7 @@ abstract class Filterable
             }
             // convert oldschool filter to closure
             if (!($filter instanceof \Closure)) {
-                $args = $this instanceof \DataFilter\Profile
+                $args = $this instanceof Profile
                     ? array(null, $this)               // data filter
                     : array($this, $this->dataFilter); // attribute
                 $filter =  call_user_func_array($filter, $args);
