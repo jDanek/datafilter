@@ -340,7 +340,7 @@ class Result
                 return !is_null($txt);
             }
         );
-        return $join ? join($join, $errors) : $errors;
+        return $join ? implode($join, $errors) : $errors;
     }
 
 
@@ -368,7 +368,7 @@ class Result
                 if ($count > 1) {
 
                     for ($i = $count -1; $i >= 1; $i--) {
-                        $testName = join(Util::$FLATTEN_SEPARATOR, array_splice($parts, 0, $i));
+                        $testName = implode(Util::$FLATTEN_SEPARATOR, array_splice($parts, 0, $i));
                         $attrib   = $this->dataFilter->getAttrib($testName. Util::$FLATTEN_SEPARATOR. '*');
                         if ($attrib) {
                             break 1;
@@ -430,7 +430,7 @@ class Result
                 $parts = explode(Util::$FLATTEN_SEPARATOR, $attribName);
                 $count = count($parts);
                 if ($count > 1 && $parts[$count-1] === '*') {
-                    $before = join(Util::$FLATTEN_SEPARATOR, array_splice($parts, 0, $count - 1)). Util::$FLATTEN_SEPARATOR;
+                    $before = implode(Util::$FLATTEN_SEPARATOR, array_splice($parts, 0, $count - 1)). Util::$FLATTEN_SEPARATOR;
                     $seen   = array_filter(array_keys($seenAttrib), function ($check) use ($before) {
                         return strpos($check, $before) === 0;
                     });

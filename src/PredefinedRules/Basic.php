@@ -64,7 +64,7 @@ class Basic
     public static function ruleRegex($regex)
     {
         $args = func_get_args();
-        $regex = join(':', $args);
+        $regex = implode(':', $args);
 
         /*not in format "/../<modifier>", "#..#<modifier>"  nor "~..~<modifier>" */
         if (!preg_match('/^([\/#~]).+\1[msugex]*$/', $regex)) {
@@ -86,7 +86,7 @@ class Basic
     public static function ruleRegexInverse($regex)
     {
         $args = func_get_args();
-        $regex = join(':', $args);
+        $regex = implode(':', $args);
 
         /*not in format "/../<modifier>", "#..#<modifier>"  nor "~..~<modifier>" */
         if (!preg_match('/^([\/#~]).+\1[msugex]*$/', $regex)) {
