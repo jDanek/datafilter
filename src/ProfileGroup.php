@@ -48,11 +48,9 @@ class ProfileGroup
 
     /**
      * Run checks for data on last profile, return result object
-     * @param string|null $profileName  Optional: profile name to use
-     * @return Result
      * @throws \InvalidArgumentException
      */
-    public function run(array $data, ?string $profileName = null)
+    public function run(array $data, ?string $profileName = null): Result
     {
         if ($profileName) {
             $this->setProfile($profileName);
@@ -75,7 +73,6 @@ class ProfileGroup
 
     /**
      * Returns last result of the current profile
-     * @param string|null  $profileName  Optional: profile name to use
      * @throws \InvalidArgumentException
      */
     public function getLastResult(?string $profileName = null): Result

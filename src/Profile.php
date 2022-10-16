@@ -140,19 +140,19 @@ class Profile extends Filterable
     public const DEFAULT_ERROR = 'Attribute ":attribute:" does not match ":rule:"';
     public const DEFAULT_MISSING = 'Attribute ":attribute:" is missing';
 
-    /** @var array  */
+    /** @var array */
     protected $attributes = [];
-    /** @var array  */
+    /** @var array */
     protected $predefinedRuleClasses = [
         PredefinedRules\Basic::class
     ];
-    /** @var array  */
+    /** @var array */
     protected $predefinedFilterClasses = [
         PredefinedFilters\Basic::class
     ];
-    /** @var string  */
+    /** @var string */
     protected $errorTemplate = self::DEFAULT_ERROR;
-    /** @var string  */
+    /** @var string */
     protected $missingTemplate = self::DEFAULT_MISSING;
     /** @var Result */
     protected $lastResult;
@@ -167,11 +167,11 @@ class Profile extends Filterable
         }
         foreach (['ruleClasses', 'filterClasses'] as $var) {
             if (isset($definition[$var])) {
-                $accessor = 'predefined'. ucfirst($var);
+                $accessor = 'predefined' . ucfirst($var);
                 foreach ($definition[$var] as $addClass) {
-                    array_push($this->{$accessor}, $addClass);
+                    array_push($this->$accessor, $addClass);
                 }
-                array_unique($this->{$accessor});
+                array_unique($this->$accessor);
             }
         }
         if (isset($definition['preFilters'])) {
@@ -182,8 +182,6 @@ class Profile extends Filterable
         }
         if (isset($definition['attributes'])) {
             $this->setAttributes($definition['attributes']);
-        } elseif (isset($definition['attributes'])) {
-            $this->setAttributes($definition['attributes']);
         } else {
             $this->attributes = [];
         }
@@ -191,7 +189,7 @@ class Profile extends Filterable
 
     /**
      * Construct from JSON
-     * @param string $json  The JSON or path to JSON file
+     * @param string $json The JSON or path to JSON file
      * @throws \RuntimeException
      */
     public static function fromJson(string $json): Profile
@@ -217,7 +215,7 @@ class Profile extends Filterable
 
     /**
      * Set (replace/add) multiple named attributes at once
-     * @param array $definition  Attrib/rule definition
+     * @param array $definition Attrib/rule definition
      */
     public function setAttributes(array $definition): void
     {
@@ -226,10 +224,9 @@ class Profile extends Filterable
         }
     }
 
-
     /**
      * Set (replace/add) a named attribute. Returns the new attrib
-     * @param mixed   $definition  Attrib/rule definition or \DataFilter\Attribute object
+     * @param mixed $definition Attrib/rule definition or \DataFilter\Attribute object
      */
     public function setAttribute(string $name, $definition = null): Attribute
     {
@@ -285,16 +282,18 @@ class Profile extends Filterable
 
     /**
      * Returns default error template
+     * @return string|callable
      */
-    public function getErrorTemplate(): string
+    public function getErrorTemplate()
     {
         return $this->errorTemplate;
     }
 
     /**
      * Returns default missing template
+     * * @return string|callable
      */
-    public function getMissingTemplate(): string
+    public function getMissingTemplate()
     {
         return $this->missingTemplate;
     }
@@ -309,9 +308,8 @@ class Profile extends Filterable
 
     /**
      * Check this rule against input
-     * @return bool
      */
-    public function run(array $data)
+    public function run(array $data): Result
     {
         $this->lastResult = new Result($this);
         $this->lastResult->check($data);

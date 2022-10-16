@@ -19,11 +19,11 @@ abstract class Filterable
      * Add multiple filters at once
      *
      * @param string $position see Filterable::POSITION_*
-     * @param array $filters   List of filters
+     * @param callable|array $filters   List of filters
      *
      * @throws \InvalidArgumentException
      */
-    public function addFilters(string $position, array $filters): void
+    public function addFilters(string $position, $filters): void
     {
         // oops, invalid position
         if (!in_array($position, [self::POSITION_PRE, self::POSITION_POST])) {
@@ -41,9 +41,9 @@ abstract class Filterable
         }
 
         // determine accessor
-        $var = $position. 'Filters';
-        if (!$this->{$var}) {
-            $this->{$var} = [];
+        $accessor = $position. 'Filters';
+        if (!$this->{$accessor}) {
+            $this->{$accessor} = [];
         }
 
         // add all filters
@@ -105,7 +105,7 @@ abstract class Filterable
             }
 
             // add filter
-            array_push($this->{$var}, $filter);
+            array_push($this->{$accessor}, $filter);
         }
     }
 

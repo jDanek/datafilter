@@ -158,6 +158,11 @@ class Rule
         return $constraint($input, $this, $this->attribute, $this->dataFilter);
     }
 
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
     /**
      * Returns last input value used for check (or determine Dependent)
      */

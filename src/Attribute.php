@@ -10,7 +10,7 @@ namespace DataFilter;
 class Attribute extends Filterable
 {
 
-    /** @var array  */
+    /** @var array */
     protected static $DEFAULT_ATTRIBUTES = [
         'required'       => false,
         'matchAny'       => false,
@@ -24,35 +24,35 @@ class Attribute extends Filterable
         'postFilters'    => [],
     ];
 
-    /** @var Profile  */
+    /** @var Profile */
     protected $dataFilter;
-    /** @var string  */
+    /** @var string */
     protected $name;
-    /** @var bool  */
+    /** @var bool */
     protected $required = false;
-    /** @var bool  */
+    /** @var bool */
     protected $matchAny = false;
-    /** @var bool  */
+    /** @var bool */
     public $noFilters = false;
-    /** @var string  */
+    /** @var string */
     public $default = null;
-    /** @var string  */
+    /** @var string */
     public $missing = null;
-    /** @var string  */
+    /** @var string */
     public $error = null;
-    /** @var array<string, Rule>  */
+    /** @var array<string, Rule> */
     protected $rules = [];
-    /** @var array  */
+    /** @var array */
     protected $dependent = [];
-    /** @var array  */
+    /** @var array */
     protected $dependentRegex = [];
     /** @var Rule */
     protected $failedRule;
-    /** @var string  */
+    /** @var string */
     protected $lastValue;
 
     /**
-     * @param callable|string|bool|null $definition     The definition (containing rule and stuff)
+     * @param callable|string|bool|null $definition The definition (containing rule and stuff)
      */
     public function __construct(string $name, $definition, Profile $dataFilter)
     {
@@ -268,14 +268,51 @@ class Attribute extends Filterable
         return (bool)$this->failedRule;
     }
 
+    public function getErrorText(): string
+    {
+        $name = $this->name;
+        $ruleName = $this->failedRule->getName();
+        $value = $this->failedRule->getLastValue();
+
+        // process Closure
+        $errorTemplate = $this->dataFilter->getErrorTemplate();
+        if (is_callable($errorTemplate)) {
+            $response = call_user_func_array($errorTemplate, [
+                $name,
+                $ruleName,
+                $value,
+            ]);
+            $errorTemplate = $response;
+        }
+
+        $error = $this->getError() ?: $errorTemplate;
+        return Util::formatString($error, [
+            'attribute' => $name,
+            'rule' => $ruleName,
+            'value' => $value,
+        ]);
+
+    }
+
     /**
      * Returns formatted missing text
      */
     public function getMissingText(): string
     {
-        $missing = $this->missing ?: $this->dataFilter->getMissingTemplate();
+        $name = $this->name;
+
+        // process Closure
+        $missingTemplate = $this->dataFilter->getMissingTemplate();
+        if (is_callable($missingTemplate)) {
+            $response = call_user_func_array($missingTemplate, [
+                $name
+            ]);
+            $missingTemplate = $response;
+        }
+
+        $missing = $this->missing ?: $missingTemplate;
         return Util::formatString($missing, [
-            'attribute' => $this->name
+            'attribute' => $name,
         ]);
     }
 

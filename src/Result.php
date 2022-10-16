@@ -377,7 +377,7 @@ class Result
                 $this->invalidAttributes[$attributeName] = [
                     'value'  => $value,
                     'attribute' => &$attribute,
-                    'error'  => $attribute->getError()
+                    'error'  => $attribute->getErrorText()
                 ];
             }
         }
