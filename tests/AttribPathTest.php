@@ -2,13 +2,15 @@
 
 namespace DataFilter;
 
-class AttribPathTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class AttribPathTest extends TestCase
 {
 
     public function testSimpleMultiAttribPattern()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1.*' => true
             ]
         ]);
@@ -17,8 +19,8 @@ class AttribPathTest extends \PHPUnit_Framework_TestCase
 
     public function testSimpleMultiAttribPatternFail()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1.*' => true
             ]
         ]);
@@ -27,8 +29,8 @@ class AttribPathTest extends \PHPUnit_Framework_TestCase
 
     public function testComplexMultiAttribPattern()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1.*' => [
                     'required' => true,
                     'rules' => [
@@ -46,8 +48,8 @@ class AttribPathTest extends \PHPUnit_Framework_TestCase
 
     public function testComplexMultiAttribPatternFail()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1.*' => [
                     'required' => true,
                     'rules' => [
@@ -62,7 +64,6 @@ class AttribPathTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertFalse($df->check(['attrib1' => ['val1' => 'bar', 'val2' => 'arg']]));
     }
-
 
 
 }

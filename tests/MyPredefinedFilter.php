@@ -7,13 +7,13 @@ class MyPredefinedFilter
 
     public static function filterMyFilter()
     {
-        return function($input) {
-            return '['. $input. ']';
+        return function ($input) {
+            return '[' . $input . ']';
         };
     }
 
     public static function myFilter($input)
     {
-        return '['. $input. ']';
+        return '[' . $input . ']';
     }
 }

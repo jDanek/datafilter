@@ -3,66 +3,67 @@
 namespace DataFilter;
 
 use \DataFilter\Util as U;
+use PHPUnit\Framework\TestCase;
 
-class ProgrammaticTest extends \PHPUnit_Framework_TestCase
+class ProgrammaticTest extends TestCase
 {
 
     public function testManipulateRules()
     {
-        $df = new \DataFilter\Profile();
+        $df = new Profile();
 
-        $df->setAttrib('attrib1', false);
+        $df->setAttribute('attrib1', false);
 
         // all optional
         $this->assertTrue($df->check([]));
 
         // one required
-        $df->getAttrib('attrib1')->setRequired(true);
+        $df->getAttribute('attrib1')->setRequired(true);
         $this->assertFalse($df->check([]));
 
         // satisfy required
         $this->assertTrue($df->check(['attrib1' => 'foo']));
 
         // add rule
-        $df->getAttrib('attrib1')->setRule('minLength', 'LenMin:5');
+        $df->getAttribute('attrib1')->setRule('minLength', 'LenMin:5');
         $this->assertFalse($df->check(['attrib1' => 'foo']));
         $this->assertTrue($df->check(['attrib1' => 'foobar']));
 
         // remove role again
-        $df->getAttrib('attrib1')->removeRule('minLength');
+        $df->getAttribute('attrib1')->removeRule('minLength');
         $this->assertTrue($df->check(['attrib1' => 'foo']));
 
         // remove required again
-        $df->getAttrib('attrib1')->setRequired(false);
+        $df->getAttribute('attrib1')->setRequired(false);
         $this->assertTrue($df->check([]));
     }
 
     public function testToggleFilters()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'required' => true,
                     'preFilters' => [
-                        function($in) {
-                            return '>'. $in;
+                        function ($in) {
+                            return '>' . $in;
                         }
                     ],
                     'postFilters' => [
                         function ($in) {
-                            return $in. '<';
+                            return $in . '<';
                         }
                     ]
                 ]
             ],
             'preFilters' => [
                 function ($in) {
-                    return '['. $in;
+                    return '[' . $in;
                 }
             ],
             'postFilters' => [
                 function ($in) {
-                    return $in. ']';
+                    return $in . ']';
                 }
             ]
         ]);
@@ -71,12 +72,12 @@ class ProgrammaticTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($res->hasError());
 
         $value = $res->getData('attrib1');
-        $this->assertEquals($value, '[>foo<]');
+        $this->assertEquals('[>foo<]', $value);
 
-        $df->getAttrib('attrib1')->setNoFilters(true);
+        $df->getAttribute('attrib1')->setNoFilters(true);
         $res = $df->run(['attrib1' => 'foo']);
         $value = $res->getData('attrib1');
-        $this->assertEquals($value, 'foo');
+        $this->assertEquals('foo', $value);
 
     }
 

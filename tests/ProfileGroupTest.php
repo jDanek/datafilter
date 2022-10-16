@@ -2,20 +2,22 @@
 
 namespace DataFilter;
 
-class ProfileGroupTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ProfileGroupTest extends TestCase
 {
 
     public function testMultiProfile()
     {
-        $sets = new \DataFilter\ProfileGroup([
+        $sets = new ProfileGroup([
             'test1' => [
-                'attribs' => [
+                'attributes' => [
                     'attrib1' => true,
                     'attrib2' => false
                 ],
             ],
             'test2' => [
-                'attribs' => [
+                'attributes' => [
                     'bla1' => true,
                     'bla2' => true
                 ]

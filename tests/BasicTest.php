@@ -2,15 +2,17 @@
 
 namespace DataFilter;
 
-class BasicTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class BasicTest extends TestCase
 {
 
     public function testCreate()
     {
         $exception = false;
         try {
-            $df = new \DataFilter\Profile([]);
-        } catch(\Exception $e) {
+            $df = new Profile([]);
+        } catch (\Exception $e) {
             error_log("Error in create: $e");
             $exception = true;
         }
@@ -21,13 +23,13 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     {
         $exception = false;
         try {
-            $df = new \DataFilter\Profile([
-                'attribs' => [
+            $df = new Profile([
+                'attributes' => [
                     'attrib1' => true,
                     'attrib2' => false
                 ]
             ]);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             error_log("Error in create: $e");
             $exception = true;
         }
@@ -39,8 +41,8 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         $exception = false;
         $checkRes = false;
         try {
-            $df = new \DataFilter\Profile([
-                'attribs' => [
+            $df = new Profile([
+                'attributes' => [
                     'attrib1' => true,
                     'attrib2' => false
                 ]
@@ -50,11 +52,10 @@ class BasicTest extends \PHPUnit_Framework_TestCase
             ];
             if ($df->check($input)) {
                 $checkRes = true;
-            }
-            else {
+            } else {
                 print_r($df);
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             error_log("Error in create: $e");
             $exception = true;
         }
@@ -63,8 +64,8 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 
     public function testFilterSimple2()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => true,
                 'attrib2' => false
             ]
@@ -77,8 +78,8 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 
     public function testCanMissing()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => true,
                 'attrib2' => false
             ]
@@ -88,14 +89,14 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         ];
         $res = $df->run($input);
         $this->assertTrue($res->hasError());
-        $this->assertEquals($res->getErrorTexts(' - '), 'Attribute "attrib1" is missing');
+        $this->assertEquals('Attribute "attrib1" is missing', $res->getErrorTexts(' - '));
     }
 
     public function testCanSimpleConstraint()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
-                'attrib1' => function($input) {
+        $df = new Profile([
+            'attributes' => [
+                'attrib1' => function ($input) {
                     return $input === 'bar';
                 }
             ]

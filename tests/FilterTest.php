@@ -2,24 +2,26 @@
 
 namespace DataFilter;
 
-class FilterTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class FilterTest extends TestCase
 {
 
     public function testGlobalFilters()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => true,
                 'attrib2' => false
             ],
             'preFilters' => [
-                function($in) {
-                    return 'X'. $in;
+                function ($in) {
+                    return 'X' . $in;
                 }
             ],
             'postFilters' => [
-                function($in) {
-                    return $in. 'Y';
+                function ($in) {
+                    return $in . 'Y';
                 }
             ]
         ]);
@@ -29,32 +31,32 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(empty($data));
         $this->assertTrue(isset($data['attrib1']) && isset($data['attrib2']) && isset($data['attrib3']));
         $this->assertEquals(
-            $data['attrib1']. ':'. $data['attrib2']. ':'. $data['attrib3'],
-            'XfooY:XbarY:Xunknown'
+            'XfooY:XbarY:Xunknown',
+            $data['attrib1'] . ':' . $data['attrib2'] . ':' . $data['attrib3']
         );
     }
 
 
     public function testAttribFilters()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'preFilters' => [
-                        function($in) {
-                            return 'X'. $in;
+                        function ($in) {
+                            return 'X' . $in;
                         }
                     ],
                     'postFilters' => [
-                        function($in) {
-                            return $in. 'Y';
+                        function ($in) {
+                            return $in . 'Y';
                         }
                     ]
                 ],
                 'attrib2' => [
                     'postFilters' => [
-                        function($in) {
-                            return $in. 'Y';
+                        function ($in) {
+                            return $in . 'Y';
                         }
                     ]
                 ]
@@ -67,16 +69,16 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(empty($data));
         $this->assertTrue(isset($data['attrib1']) && isset($data['attrib2']) && isset($data['attrib3']));
         $this->assertEquals(
-            $data['attrib1']. ':'. $data['attrib2']. ':'. $data['attrib3'],
-            'XfooY:barY:unknown'
+            'XfooY:barY:unknown',
+            $data['attrib1'] . ':' . $data['attrib2'] . ':' . $data['attrib3']
         );
     }
 
 
     public function testPFBasicTrim()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => true
             ],
             'preFilters' => 'Trim',
@@ -84,14 +86,14 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $res = $df->run(['attrib1' => '  ok  ']);
         $data = $res->getValidData();
         $this->assertTrue(isset($data['attrib1']));
-        $this->assertEquals($data['attrib1'], 'ok');
+        $this->assertEquals('ok', $data['attrib1']);
     }
 
 
     public function testPFBasicUrlPart()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => true
             ],
             'preFilters' => ['UrlPart']
@@ -99,19 +101,19 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $res = $df->run(['attrib1' => 'HelloThere']);
         $data = $res->getValidData();
         $this->assertTrue(isset($data['attrib1']));
-        $this->assertEquals($data['attrib1'], 'hellothere');
+        $this->assertEquals('hellothere', $data['attrib1']);
 
         $res = $df->run(['attrib1' => 'What are you doing?']);
         $data = $res->getValidData();
         $this->assertTrue(isset($data['attrib1']));
-        $this->assertEquals($data['attrib1'], 'what-are-you-doing');
+        $this->assertEquals('what-are-you-doing', $data['attrib1']);
     }
 
 
     public function testPFBasicUrlPartUnicode()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => true
             ],
             'preFilters' => ['UrlPartUnicode'],
@@ -119,14 +121,14 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $res = $df->run(['attrib1' => '&&xجx']);
         $data = $res->getValidData();
         $this->assertTrue(isset($data['attrib1']));
-        $this->assertEquals($data['attrib1'], 'xجx');
+        $this->assertEquals('xجx', $data['attrib1']);
     }
 
     public function testCustomFilter1()
     {
-        include_once __DIR__. '/MyPredefinedFilter.php';
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        include_once __DIR__ . '/MyPredefinedFilter.php';
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => true
             ],
             'preFilters' => ['MyFilter'],
@@ -135,19 +137,19 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $res = $df->run(['attrib1' => 'howdy']);
         $data = $res->getValidData();
         $this->assertTrue(isset($data['attrib1']));
-        $this->assertEquals($data['attrib1'], '[howdy]');
+        $this->assertEquals('[howdy]', $data['attrib1']);
     }
 
     public function testCustomFilter2()
     {
-        include_once __DIR__. '/MyPredefinedFilter.php';
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        include_once __DIR__ . '/MyPredefinedFilter.php';
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => true
             ],
             'preFilters' => [
                 ['\\DataFilter\\MyPredefinedFilter', 'myFilter'],
-                function($in) {
+                function ($in) {
                     return ">$in<";
                 }
             ],
@@ -155,7 +157,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $res = $df->run(['attrib1' => 'howdy']);
         $data = $res->getValidData();
         $this->assertTrue(isset($data['attrib1']));
-        $this->assertEquals($data['attrib1'], '>[howdy]<');
+        $this->assertEquals('>[howdy]<', $data['attrib1']);
     }
 
 

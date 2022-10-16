@@ -2,14 +2,16 @@
 
 namespace DataFilter;
 
-class MissingTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class MissingTest extends TestCase
 {
 
 
     public function testRequiredSimple1()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => true,
                 'attrib2' => false
             ]
@@ -20,8 +22,8 @@ class MissingTest extends \PHPUnit_Framework_TestCase
 
     public function testRequiredSimple2()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'required' => true
                 ],
@@ -36,13 +38,13 @@ class MissingTest extends \PHPUnit_Framework_TestCase
 
     public function testRequiredDependent()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'required' => true,
                     'rules' => [
                         'rule1' => [
-                            'constraint' => function($in) {
+                            'constraint' => function ($in) {
                                 return true;
                             }
                         ]
@@ -51,7 +53,7 @@ class MissingTest extends \PHPUnit_Framework_TestCase
                         'foo2' => ['attrib2'],
                         'foo3' => ['attrib3'],
                         'foo4' => ['attrib2', 'attrib3'],
-                        '*'    => ['attrib4']
+                        '*' => ['attrib4']
                     ]
                 ],
                 'attrib2' => false,
@@ -75,13 +77,13 @@ class MissingTest extends \PHPUnit_Framework_TestCase
 
     public function testRequiredDependentRegex()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'required' => true,
                     'rules' => [
                         'rule1' => [
-                            'constraint' => function($in) {
+                            'constraint' => function ($in) {
                                 return true;
                             }
                         ]

@@ -2,14 +2,16 @@
 
 namespace DataFilter;
 
-class PredefinedRuleBasicTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class PredefinedRuleBasicTest extends TestCase
 {
 
 
     public function testPRBasicLenMin()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'rules' => [
                         'rule1' => [
@@ -25,8 +27,8 @@ class PredefinedRuleBasicTest extends \PHPUnit_Framework_TestCase
 
     public function testPRBasicLenMax()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'rules' => [
                         'rule1' => [
@@ -42,8 +44,8 @@ class PredefinedRuleBasicTest extends \PHPUnit_Framework_TestCase
 
     public function testPRBasicLenRange()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'rules' => [
                         'rule1' => [
@@ -61,8 +63,8 @@ class PredefinedRuleBasicTest extends \PHPUnit_Framework_TestCase
 
     public function testPRBasicRegex()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'rules' => [
                         'rule1' => [
@@ -80,8 +82,8 @@ class PredefinedRuleBasicTest extends \PHPUnit_Framework_TestCase
 
     public function testPRBasicNumber()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'rules' => [
                         'rule1' => [
@@ -100,8 +102,8 @@ class PredefinedRuleBasicTest extends \PHPUnit_Framework_TestCase
 
     public function testPRBasicInt()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'rules' => [
                         'rule1' => [
@@ -120,8 +122,8 @@ class PredefinedRuleBasicTest extends \PHPUnit_Framework_TestCase
 
     public function testPRBasicAlphanum()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'rules' => [
                         'rule1' => [
@@ -140,8 +142,8 @@ class PredefinedRuleBasicTest extends \PHPUnit_Framework_TestCase
 
     public function testPRBasicInArray()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'rules' => [
                         'rule1' => [
@@ -161,8 +163,8 @@ class PredefinedRuleBasicTest extends \PHPUnit_Framework_TestCase
 
     public function testPRBasicDate()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'rules' => [
                         'rule1' => [
@@ -182,8 +184,8 @@ class PredefinedRuleBasicTest extends \PHPUnit_Framework_TestCase
 
     public function testPRBasicTime()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'rules' => [
                         'rule1' => [
@@ -201,8 +203,8 @@ class PredefinedRuleBasicTest extends \PHPUnit_Framework_TestCase
 
     public function testPRBasicDateTime()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'rules' => [
                         'rule1' => [
@@ -219,8 +221,8 @@ class PredefinedRuleBasicTest extends \PHPUnit_Framework_TestCase
 
     public function testPRBasicUrlPart()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'rules' => [
                         'rule1' => [
@@ -240,8 +242,8 @@ class PredefinedRuleBasicTest extends \PHPUnit_Framework_TestCase
 
     public function testPRBasicEmail()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'rules' => [
                         'rule1' => [
@@ -266,9 +268,9 @@ class PredefinedRuleBasicTest extends \PHPUnit_Framework_TestCase
 
     public function testPRBasicCustomRuleClass()
     {
-        include_once __DIR__. '/MyPredefinedRule.php';
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        include_once __DIR__ . '/MyPredefinedRule.php';
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => [
                     'rules' => [
                         'rule1' => [
@@ -277,7 +279,7 @@ class PredefinedRuleBasicTest extends \PHPUnit_Framework_TestCase
                     ]
                 ]
             ],
-            'ruleClasses' => ['\\MyPredefinedRule']
+            'ruleClasses' => [\MyPredefinedRule::class]
         ]);
         $this->assertTrue($df->check(['attrib1' => 'ok']));
         $this->assertFalse($df->check(['attrib1' => 'other']));

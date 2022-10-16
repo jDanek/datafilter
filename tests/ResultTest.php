@@ -2,34 +2,46 @@
 
 namespace DataFilter;
 
-class FilterResult extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ResultTest extends TestCase
 {
 
 
     public function testGetData()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'attrib1' => true,
-                'attrib2' => function($in){ return $in === 'bar'; },
+                'attrib2' => function ($in) {
+                    return $in === 'bar';
+                },
                 'attrib3' => false,
-                'attrib4' => function($in){ return $in === 'argl'; },
+                'attrib4' => function ($in) {
+                    return $in === 'argl';
+                },
             ],
 
         ]);
-        $res = $df->run(['attrib1' => 'foo', 'attrib2' => 'bar', 'attrib3' => 'yadda', 'attrib4' => 'huh', 'attrib5' => 'wtf']);
+        $res = $df->run([
+            'attrib1' => 'foo',
+            'attrib2' => 'bar',
+            'attrib3' => 'yadda',
+            'attrib4' => 'huh',
+            'attrib5' => 'wtf'
+        ]);
 
         $dataValid = $res->getValidData();
-        $this->assertEquals(join(':', array_values($dataValid)), 'foo:bar:yadda');
+        $this->assertEquals('foo:bar:yadda', implode(':', array_values($dataValid)));
 
         $dataInvalid = $res->getInvalidData();
-        $this->assertEquals(join(':', array_values($dataInvalid)), 'huh');
+        $this->assertEquals('huh', implode(':', array_values($dataInvalid)));
 
         $dataUnknown = $res->getUnknownData();
-        $this->assertEquals(join(':', array_values($dataUnknown)), 'wtf');
+        $this->assertEquals('wtf', implode(':', array_values($dataUnknown)));
 
         $dataAll = $res->getAllData();
-        $this->assertEquals(join(':', array_values($dataAll)), 'foo:bar:yadda:huh:wtf');
+        $this->assertEquals('foo:bar:yadda:huh:wtf', implode(':', array_values($dataAll)));
     }
 
 

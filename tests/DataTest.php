@@ -3,14 +3,15 @@
 namespace DataFilter;
 
 use \DataFilter\Util as U;
+use PHPUnit\Framework\TestCase;
 
-class DataTest extends \PHPUnit_Framework_TestCase
+class DataTest extends TestCase
 {
 
     public function testMultiLevel()
     {
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'level1' => false,
                 'Object1.level2' => false,
                 'Object2.Sub1.level3' => false,
@@ -18,7 +19,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
         $res = $df->run([
-            'level1'  => 'l1',
+            'level1' => 'l1',
             'Object1' => [
                 'level2' => 'l2'
             ],
@@ -36,16 +37,16 @@ class DataTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
         $this->assertEquals(
-            json_encode($res->getAllData()),
-            '{"level1":"l1","Object1.level2":"l2","Object2.Sub1.level3":"l3","Object3.Sub2.SubSub2.level4":"l4"}'
+            '{"level1":"l1","Object1.level2":"l2","Object2.Sub1.level3":"l3","Object3.Sub2.SubSub2.level4":"l4"}',
+            json_encode($res->getAllData())
         );
     }
 
     public function testMultiLevel2()
     {
         U::$FLATTEN_SEPARATOR = '::';
-        $df = new \DataFilter\Profile([
-            'attribs' => [
+        $df = new Profile([
+            'attributes' => [
                 'level1' => false,
                 'Object1::level2' => false,
                 'Object2::Sub1::level3' => false,
@@ -53,7 +54,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
         $res = $df->run([
-            'level1'  => 'l1',
+            'level1' => 'l1',
             'Object1' => [
                 'level2' => 'l2'
             ],
@@ -71,8 +72,8 @@ class DataTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
         $this->assertEquals(
-            json_encode($res->getAllData()),
-            '{"level1":"l1","Object1::level2":"l2","Object2::Sub1::level3":"l3","Object3::Sub2::SubSub2::level4":"l4"}'
+            '{"level1":"l1","Object1::level2":"l2","Object2::Sub1::level3":"l3","Object3::Sub2::SubSub2::level4":"l4"}',
+            json_encode($res->getAllData())
         );
     }
 
