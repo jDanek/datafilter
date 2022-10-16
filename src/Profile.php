@@ -169,9 +169,9 @@ class Profile extends Filterable
             if (isset($definition[$var])) {
                 $accessor = 'predefined' . ucfirst($var);
                 foreach ($definition[$var] as $addClass) {
-                    array_push($this->$accessor, $addClass);
+                    array_push($this->{$accessor}, $addClass);
                 }
-                array_unique($this->$accessor);
+                array_unique($this->{$accessor});
             }
         }
         if (isset($definition['preFilters'])) {
