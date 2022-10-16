@@ -2,7 +2,7 @@
 
 namespace DataFilter;
 
-use \DataFilter\Util as U;
+use \DataFilter\Util;
 
 /**
  * Data attribute
@@ -362,16 +362,16 @@ class Result
         $requiredDependent    = array();
         $seenAttrib           = array();
 
-        foreach (U::flatten($data) as $attribName => $value) {
+        foreach (Util::flatten($data) as $attribName => $value) {
             $attrib = $this->dataFilter->getAttrib($attribName);
             if (!$attrib) {
-                $parts = explode(U::$FLATTEN_SEPARATOR, $attribName);
+                $parts = explode(Util::$FLATTEN_SEPARATOR, $attribName);
                 $count = count($parts);
                 if ($count > 1) {
 
                     for ($i = $count -1; $i >= 1; $i--) {
-                        $testName = join(U::$FLATTEN_SEPARATOR, array_splice($parts, 0, $i));
-                        $attrib   = $this->dataFilter->getAttrib($testName. U::$FLATTEN_SEPARATOR. '*');
+                        $testName = join(Util::$FLATTEN_SEPARATOR, array_splice($parts, 0, $i));
+                        $attrib   = $this->dataFilter->getAttrib($testName. Util::$FLATTEN_SEPARATOR. '*');
                         if ($attrib) {
                             break 1;
                         }
@@ -429,10 +429,10 @@ class Result
 
             // required -> missing
             elseif ($attrib->isRequired() || isset($requiredDependent[$attribName])) {
-                $parts = explode(U::$FLATTEN_SEPARATOR, $attribName);
+                $parts = explode(Util::$FLATTEN_SEPARATOR, $attribName);
                 $count = count($parts);
                 if ($count > 1 && $parts[$count-1] === '*') {
-                    $before = join(U::$FLATTEN_SEPARATOR, array_splice($parts, 0, $count - 1)). U::$FLATTEN_SEPARATOR;
+                    $before = join(Util::$FLATTEN_SEPARATOR, array_splice($parts, 0, $count - 1)). Util::$FLATTEN_SEPARATOR;
                     $seen   = array_filter(array_keys($seenAttrib), function ($check) use ($before) {
                         return strpos($check, $before) === 0;
                     });

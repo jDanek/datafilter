@@ -2,8 +2,7 @@
 
 namespace DataFilter;
 
-use \DataFilter\Util as U;
-use \DataFilter\Filterable;
+use \DataFilter\Util;
 
 /**
  * Data attribute
@@ -367,7 +366,7 @@ class Attribute extends Filterable
     public function getMissingText()
     {
         $missing = $this->missing ?: $this->dataFilter->getMissingTemplate();
-        return U::formatString($missing, array(
+        return Util::formatString($missing, array(
             'attrib' => $this->name
         ));
     }

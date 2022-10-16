@@ -2,7 +2,7 @@
 
 namespace DataFilter;
 
-use \DataFilter\Util as U;
+use \DataFilter\Util;
 
 /**
  * Data attribute
@@ -241,7 +241,7 @@ class Rule
         if (!$error) {
             $error = $this->dataFilter->getErrorTemplate();
         }
-        return U::formatString($error, $formatData);
+        return Util::formatString($error, $formatData);
     }
 
 }

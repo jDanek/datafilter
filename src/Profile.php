@@ -2,8 +2,6 @@
 
 namespace DataFilter;
 
-use DataFilter\Filterable;
-
 /**
  * Filtering data
 
