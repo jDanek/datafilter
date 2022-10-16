@@ -40,7 +40,7 @@ class Attribute extends Filterable
     public $missing = null;
     /** @var string  */
     public $error = null;
-    /** @var array  */
+    /** @var array<string, Rule>  */
     protected $rules = [];
     /** @var array  */
     protected $dependent = [];
@@ -52,35 +52,21 @@ class Attribute extends Filterable
     protected $lastValue;
 
     /**
-     * Constructor for DataFilter\Attribute
-     *
-     * @param string                $name        Name of the attrib (unique per data filter)
-     * @param mixed                 $definition  The definition (containing rule and stuff)
-     * @param Profile $dataFilter  Parental data filter
+     * @param callable|string|bool|null $definition     The definition (containing rule and stuff)
      */
-    public function __construct($name, $definition, Profile $dataFilter)
+    public function __construct(string $name, $definition, Profile $dataFilter)
     {
         $this->name = $name;
         $this->dataFilter = $dataFilter;
-        $this->rules = [];
-        $this->dependent = [];
-        $this->dependentRegex = [];
-        $this->preFilters = [];
-        $this->postFilters = [];
 
         // no definition
         if (is_null($definition)) {
-            // nada, nil, nothing
+            // nothing
         }
 
         // required, simple
-        elseif ($definition === true) {
-            $this->required = true;
-        }
-
-        // optional, simple
-        elseif ($definition === false) {
-            $this->required = false;
+        elseif (is_bool($definition)) {
+            $this->required = $definition;
         }
 
         // complex..
@@ -97,7 +83,7 @@ class Attribute extends Filterable
             // set attribs
             foreach (['required', 'matchAny', 'noFilters', 'default', 'dependent', 'dependentRegex', 'missing', 'error'] as $k) {
                 if (isset($definition[$k])) {
-                    $this->$k = $definition[$k];
+                    $this->{$k} = $definition[$k];
                 }
             }
 
@@ -112,10 +98,8 @@ class Attribute extends Filterable
 
     /**
      * Set (replace/add) multiple rules at once
-     *
-     * @param array  $rules  List of rules
      */
-    public function setRules($rules)
+    public function setRules(array $rules): void
     {
         foreach ($rules as $ruleName => $rule) {
             $this->setRule($ruleName, $rule);
@@ -124,70 +108,53 @@ class Attribute extends Filterable
 
     /**
      * Set (replace/add) a single named rule. Returns the new rule
-     *
-     * @param string  $ruleName  Name of the rule (unique per attribute)
-     * @param mixed   $rule      the rule definition or a \DataFilter\Rule object
-     *
-     * @return Rule
+     * @param mixed $definition the rule definition or a \DataFilter\Rule object
      */
-    public function setRule($ruleName, $definition)
+    public function setRule(string $name, $definition): Rule
     {
-        $this->rules[$ruleName] = is_object($definition) && $definition instanceof Rule
+        $this->rules[$name] = is_object($definition) && $definition instanceof Rule
             ? $definition
-            : new Rule($ruleName, $definition, $this, $this->dataFilter);
-        return $this->rules[$ruleName];
+            : new Rule($name, $definition, $this, $this->dataFilter);
+        return $this->rules[$name];
     }
 
     /**
-     * List of all rules as array of (name => \DataFilter\Rule)
-     *
-     * @return array
+     * List of all rules as array
+     * @return array<string, Rule>
      */
-    public function getRules()
+    public function getRules(): array
     {
         return $this->rules;
     }
 
     /**
      * Get a single rule by name (or null)
-     *
-     * @param string  $ruleName  Name of the rule (unique per attribute)
-     *
-     * @return Rule
      */
-    public function getRule($ruleName)
+    public function getRule(string $name): ?Rule
     {
-        return $this->rules[$ruleName] ?? null;
+        return $this->rules[$name] ?? null;
     }
 
     /**
      * Removes a single rule by name
-     *
-     * @param string  $ruleName  Name of the rule (unique per attribute)
-     *
-     * @return bool  Whether removed
      */
-    public function removeRule($ruleName)
+    public function removeRule(string $name): bool
     {
-        if (isset($this->rules[$ruleName])) {
-            unset($this->rules[$ruleName]);
+        if (isset($this->rules[$name])) {
+            unset($this->rules[$name]);
             return true;
         }
         return false;
     }
 
     /**
-     * Check all rules of this attribyte against input
-     *
-     * @param string  $input  Input data
-     *
-     * @return bool
+     * Check all rules of this attribute against input
      */
-    public function check($input)
+    public function check(string $input): bool
     {
         $this->lastValue = $input;
         $anyFailed = false;
-        foreach ($this->rules as $ruleName => &$rule) {
+        foreach ($this->rules as $name => &$rule) {
 
             // at least OK
             if ($rule->check($input)) {
@@ -218,11 +185,9 @@ class Attribute extends Filterable
     }
 
     /**
-     * Adds possible requireds to list if. Only if not have error.
-     *
-     * @param array  $required
+     * Adds possible requires to list if. Only if not have error.
      */
-    public function determineDependents($input, array &$required)
+    public function determineDependents($input, array &$required): void
     {
         if ($this->hasError()) {
             return;
@@ -262,30 +227,24 @@ class Attribute extends Filterable
 
     /**
      * Returns attribute name
-     *
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
      * Returns last input value used for check (or determine Dependent)
-     *
-     * @return string
      */
-    public function getLastValue()
+    public function getLastValue(): string
     {
         return $this->lastValue;
     }
 
     /**
      * Returns error
-     *
-     * @return string
      */
-    public function getError()
+    public function getError(): ?string
     {
         if ($this->failedRule) {
             return $this->failedRule->getError($this);
@@ -295,30 +254,24 @@ class Attribute extends Filterable
 
     /**
      * Returns default error string
-     *
-     * @return string
      */
-    public function getDefaultErrorStr()
+    public function getDefaultErrorStr(): ?string
     {
         return $this->error;
     }
 
     /**
      * Whether any has failed
-     *
-     * @return bool
      */
-    public function hasError()
+    public function hasError(): bool
     {
         return (bool)$this->failedRule;
     }
 
     /**
      * Returns formatted missing text
-     *
-     * @return string
      */
-    public function getMissingText()
+    public function getMissingText(): string
     {
         $missing = $this->missing ?: $this->dataFilter->getMissingTemplate();
         return Util::formatString($missing, [
@@ -328,80 +281,64 @@ class Attribute extends Filterable
 
     /**
      * Returns default value (or null)
-     *
-     * @return string
      */
-    public function getDefault()
+    public function getDefault(): ?string
     {
         return $this->default;
     }
 
     /**
      * Returns whether required
-     *
-     * @return bool
      */
-    public function isRequired()
+    public function isRequired(): bool
     {
         return $this->required;
     }
 
     /**
      * Returns whether filters are enabled to use
-     *
-     * @return bool
      */
-    public function useFilters()
+    public function useFilters(): bool
     {
         return !$this->noFilters;
     }
 
     /**
      * Sets required mode
-     *
-     * @param bool  $mode  The mode. Defaults to true
      */
-    public function setRequired($mode = true)
+    public function setRequired(bool $mode = true): void
     {
         $this->required = $mode;
     }
 
     /**
      * Sets matchAny mode
-     *
-     * @param bool  $mode  The state. Defaults to true
      */
-    public function setMatchAny($mode = true)
+    public function setMatchAny(bool $mode = true): void
     {
         $this->matchAny = $mode;
     }
 
     /**
      * Sets noFilters mode
-     *
-     * @param bool  $mode  The state. Defaults to true
      */
-    public function setNoFilters($mode = true)
+    public function setNoFilters(bool $mode = true): void
     {
         $this->noFilters = $mode;
     }
 
     /**
      * Sets default string (or null)
-     *
-     * @param string  $default  Defaults to null
      */
-    public function setDefault($default = null)
+    public function setDefault(?string $default = null): void
     {
         $this->default = $default;
     }
 
     /**
      * Sets missing template (or null)
-     *
-     * @param string  $template  Defaults to null
      */
-    public function setMissing($template = null)
+    public function setMissing(?string $template = null): void
     {
         $this->missing = $template;
     }
@@ -409,7 +346,7 @@ class Attribute extends Filterable
     /**
      * Resets check results
      */
-    public function reset()
+    public function reset(): void
     {
         $this->failedRule = null;
     }

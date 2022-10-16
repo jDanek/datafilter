@@ -16,12 +16,12 @@ abstract class Filterable
     /**
      * Add multiple filters at once
      *
-     * @param string  $position  Either "pre" or "post"
-     * @param array   $filters   List of filters
+     * @param string $position  Either "pre" or "post"
+     * @param array $filters   List of filters
      *
      * @throws \InvalidArgumentException
      */
-    public function addFilters($position, $filters)
+    public function addFilters(string $position, array $filters): void
     {
         // oops, invalid position
         if (!in_array($position, ['pre', 'post'])) {
@@ -35,8 +35,8 @@ abstract class Filterable
 
         // determine accessor
         $var = $position. 'Filters';
-        if (!$this->$var) {
-            $this->$var = [];
+        if (!$this->{$var}) {
+            $this->{$var} = [];
         }
 
         // add all filters
@@ -92,46 +92,40 @@ abstract class Filterable
             }
 
             // add filter
-            array_push($this->$var, $filter);
+            array_push($this->{$var}, $filter);
         }
     }
 
     /**
      * Add multiple pre-filters at once
-     *
-     * @param array   $filters   List of filters
-     *
      * @throws \InvalidArgumentException
      */
-    public function addPreFilters($filters)
+    public function addPreFilters(array $filters): void
     {
-        return $this->addFilters('pre', $filters);
+        $this->addFilters('pre', $filters);
     }
 
     /**
      * Add multiple post-filters at once
-     *
-     * @param array   $filters   List of filters
-     *
      * @throws \InvalidArgumentException
      */
-    public function addPostFilters($filters)
+    public function addPostFilters(array $filters): void
     {
-        return $this->addFilters('post', $filters);
+        $this->addFilters('post', $filters);
     }
 
 
     /**
      * Runs filter on input
      *
-     * @param string  $position  Either "pre" or "post"
-     * @param string  $input     The input
+     * @param string $position  Either "pre" or "post"
+     * @param string $input     The input
      *
      * @return string
      *
      * @throws \InvalidArgumentException
      */
-    public function applyFilter($position, $input)
+    public function applyFilter(string $position, string $input): string
     {
         // oops, invalid position
         if (!in_array($position, ['pre', 'post'])) {
@@ -141,11 +135,11 @@ abstract class Filterable
         // determine accessor
         $var = $position. 'Filters';
 
-        if (!$this->$var) {
+        if (!$this->{$var}) {
             return $input;
         }
 
-        foreach ($this->$var as $filter) {
+        foreach ($this->{$var} as $filter) {
             $input = $filter($input);
         }
         return $input;

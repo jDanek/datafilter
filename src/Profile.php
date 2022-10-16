@@ -157,12 +157,7 @@ class Profile extends Filterable
     /** @var Result */
     protected $lastResult;
 
-    /**
-     * Constructor for DataFilter\DataFilter
-     *
-     * @param array  $definition  Optional definition
-     */
-    public function __construct($definition = [])
+    public function __construct(array $definition = [])
     {
         if (isset($definition['errorTemplate'])) {
             $this->errorTemplate = $definition['errorTemplate'];
@@ -174,7 +169,7 @@ class Profile extends Filterable
             if (isset($definition[$var])) {
                 $accessor = 'predefined'. ucfirst($var);
                 foreach ($definition[$var] as $addClass) {
-                    array_push($this->$accessor, $addClass);
+                    array_push($this->{$accessor}, $addClass);
                 }
                 array_unique($this->$accessor);
             }
@@ -195,94 +190,78 @@ class Profile extends Filterable
     }
 
     /**
-     * Construct from JSON file
-     *
-     * @param string  $jsonFile  The JSON file
-     *
-     * @return Profile
-     *
+     * Construct from JSON
+     * @param string $json  The JSON or path to JSON file
      * @throws \RuntimeException
      */
-    public static function fromJson($jsonFile)
+    public static function fromJson(string $json): Profile
     {
-        if (!is_file($jsonFile) && !is_readable($jsonFile)) {
-            throw new \RuntimeException("Either '$jsonFile' is not a file or cannot access it");
+        // handle file
+        $content = '';
+        if (is_file($json)) {
+            if (is_file($json) && !is_readable($json)) {
+                throw new \RuntimeException("Either '$json' is not a file or cannot access it");
+            }
+            $content = file_get_contents($json);
+            if (!$content) {
+                throw new \RuntimeException("Cannot load empty JSON file '$json'");
+            }
         }
-        $content = file_get_contents($jsonFile);
-        if (!$content) {
-            throw new \RuntimeException("Cannot load empty JSON file '$jsonFile'");
+        // handle string
+        $jsonArr = json_decode($content, true);
+        if (!$jsonArr) {
+            throw new \RuntimeException("Could not parse JSON");
         }
-        $json = json_decode($content, true);
-        if (!$json) {
-            throw new \RuntimeException("Could not parse JSON from '$jsonFile'");
-        }
-        return new Profile($json);
+        return new Profile($jsonArr);
     }
-
-
 
     /**
      * Set (replace/add) multiple named attribs at once
-     *
-     * @param array  $attribsDefinition  Attrib/rule definition
+     * @param array $definition  Attrib/rule definition
      */
-    public function setAttribs($attribsDefinition)
+    public function setAttribs(array $definition): void
     {
-        foreach ($attribsDefinition as $attribName => $definition) {
-            $this->setAttrib($attribName, $definition);
+        foreach ($definition as $name => $def) {
+            $this->setAttrib($name, $def);
         }
     }
 
 
     /**
      * Set (replace/add) a named attribute. Returns the new attrib
-     *
-     * @param string  $attribName        Name of the attrib
-     * @param mixed   $attribDefinition  Attrib/rule definition or \DataFilter\Attribute object
-     *
-     * @return Attribute
+     * @param mixed   $definition  Attrib/rule definition or \DataFilter\Attribute object
      */
-    public function setAttrib($attribName, $attribDefinition = null)
+    public function setAttrib(string $name, $definition = null): Attribute
     {
-        $this->attribs[$attribName] = is_object($attribDefinition) && $attribDefinition instanceof Attribute
-            ? $attribDefinition
-            : new Attribute($attribName, $attribDefinition, $this);
-        return $this->attribs[$attribName];
+        $this->attribs[$name] = is_object($definition) && $definition instanceof Attribute
+            ? $definition
+            : new Attribute($name, $definition, $this);
+        return $this->attribs[$name];
     }
 
     /**
      * Returns list of attributes (assoc array)
-     *
-     * @return array
      */
-    public function getAttribs()
+    public function getAttribs(): array
     {
         return $this->attribs;
     }
 
     /**
      * Returns single attribute by name (or null)
-     *
-     * @param string  $attribName  Name of attrib
-     *
-     * @return Attribute
      */
-    public function getAttrib($attribName)
+    public function getAttrib(string $name): ?Attribute
     {
-        return $this->attribs[$attribName] ?? null;
+        return $this->attribs[$name] ?? null;
     }
 
     /**
      * Removes a single attribute by name
-     *
-     * @param string  $attribName  Name of the attrib
-     *
-     * @return bool  Whether removed
      */
-    public function removeAttrib($attribName)
+    public function removeAttrib(string $name): bool
     {
-        if (isset($this->attribs[$attribName])) {
-            unset($this->attribs[$attribName]);
+        if (isset($this->attribs[$name])) {
+            unset($this->attribs[$name]);
             return true;
         }
         return false;
@@ -290,63 +269,49 @@ class Profile extends Filterable
 
     /**
      * Returns list of predefined rule classes
-     *
-     * @return array
      */
-    public function getPredefinedRuleClasses()
+    public function getPredefinedRuleClasses(): array
     {
         return $this->predefinedRuleClasses;
     }
 
     /**
      * Returns list of predefined filter classes
-     *
-     * @return array
      */
-    public function getPredefinedFilterClasses()
+    public function getPredefinedFilterClasses(): array
     {
         return $this->predefinedFilterClasses;
     }
 
-
     /**
      * Returns default error template
-     *
-     * @return string
      */
-    public function getErrorTemplate()
+    public function getErrorTemplate(): string
     {
         return $this->errorTemplate;
     }
 
     /**
      * Returns default missing template
-     *
-     * @return string
      */
-    public function getMissingTemplate()
+    public function getMissingTemplate(): string
     {
         return $this->missingTemplate;
     }
 
     /**
      * Returns the last check result
-     *
-     * @return Result
      */
-    public function getLastResult()
+    public function getLastResult(): Result
     {
         return $this->lastResult;
     }
 
     /**
      * Check this rule against input
-     *
-     * @param array  $data  Input data
-     *
      * @return bool
      */
-    public function run($data)
+    public function run(array $data)
     {
         $this->lastResult = new Result($this);
         $this->lastResult->check($data);
@@ -355,15 +320,10 @@ class Profile extends Filterable
 
     /**
      * Check this rule against input
-     *
-     * @param array  $data  Input data
-     *
-     * @return bool
      */
-    public function check($data)
+    public function check(array $data): bool
     {
         return !$this->run($data)->hasError();
     }
-
 
 }

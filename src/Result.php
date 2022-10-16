@@ -22,10 +22,6 @@ class Result
     protected $unknownAttribs = [];
 
     /**
-     * Constructor for DataFilter\Attribute
-     *
-     * @param string                $name        Name of the attrib (unique per data filter)
-     * @param mixed                 $definition  The defnition (containing rule and stuff)
      * @param Profile $dataFilter  Parental data filter
      */
     public function __construct(Profile $dataFilter)
@@ -44,7 +40,7 @@ class Result
      ];
      </code>
      */
-    public function getValidAttribs()
+    public function getValidAttribs(): array
     {
         return array_combine(
             array_keys($this->validAttribs),
@@ -65,7 +61,7 @@ class Result
      ];
      </code>
      */
-    public function getValidData()
+    public function getValidData(): array
     {
         return array_combine(
             array_keys($this->validAttribs),
@@ -86,7 +82,7 @@ class Result
      ];
      </code>
      */
-    public function getInvalidAttribs()
+    public function getInvalidAttribs(): array
     {
         return array_combine(
             array_keys($this->invalidAttribs),
@@ -107,7 +103,7 @@ class Result
      ];
      </code>
      */
-    public function getInvalidData()
+    public function getInvalidData(): array
     {
         return array_combine(
             array_keys($this->invalidAttribs),
@@ -128,7 +124,7 @@ class Result
      ];
      </code>
      */
-    public function getInvalidErrors()
+    public function getInvalidErrors(): array
     {
         return array_combine(
             array_keys($this->invalidAttribs),
@@ -149,7 +145,7 @@ class Result
      ];
      </code>
      */
-    public function getMissingAttribs()
+    public function getMissingAttribs(): array
     {
         return array_combine(
             array_keys($this->missingAttribs),
@@ -170,7 +166,7 @@ class Result
      ];
      </code>
      */
-    public function getMissingErrors()
+    public function getMissingErrors(): array
     {
         return array_combine(
             array_keys($this->missingAttribs),
@@ -191,7 +187,7 @@ class Result
      ];
      </code>
      */
-    public function getInvalidOrMissingErrors()
+    public function getInvalidOrMissingErrors(): array
     {
         $all = $this->invalidAttribs + $this->missingAttribs;
         return array_combine(
@@ -203,7 +199,7 @@ class Result
     }
 
     /**
-     * Returns data of unkown input
+     * Returns data of unknown input
      *
      * @return array
      <code>
@@ -213,13 +209,13 @@ class Result
      ];
      </code>
      */
-    public function getUnknownData()
+    public function getUnknownData(): array
     {
         return $this->unknownAttribs;
     }
 
     /**
-     * Returns data of all inputs (valid, invalid and unkown input)
+     * Returns data of all inputs (valid, invalid and unknown input)
      *
      * @return array
      <code>
@@ -229,7 +225,7 @@ class Result
      ];
      </code>
      */
-    public function getAllData()
+    public function getAllData(): array
     {
         return $this->getValidData() + $this->getInvalidData() + $this->unknownAttribs;
     }
@@ -237,11 +233,11 @@ class Result
     /**
      * Returns attribute of named attrib if existing (either valid or invalid)
      *
-     * @param string  $attribName  Name of the attrib
+     * @param string $attribName  Name of the attrib
      *
      * @return Attribute
      */
-    public function getAttrib($attribName)
+    public function getAttrib(string $attribName): ?Attribute
     {
         if (isset($this->validAttribs[$attribName])) {
             return $this->validAttribs[$attribName]['attrib'];
@@ -254,12 +250,9 @@ class Result
 
     /**
      * Returns value of named attrib if existing (either valid, invalid or unknown)
-     *
-     * @param string  $attribName  Name of the attrib
-     *
      * @return string
      */
-    public function getData($attribName)
+    public function getData(string $attribName): ?string
     {
         if (isset($this->validAttribs[$attribName])) {
             return $this->validAttribs[$attribName]['value'];
@@ -276,10 +269,8 @@ class Result
 
     /**
      * Returns whether has error
-     *
-     * @return bool
      */
-    public function hasError($attribName = null)
+    public function hasError(string $attribName = null): bool
     {
         if (is_null($attribName)) {
             return count($this->invalidAttribs) > 0 || count($this->missingAttribs) > 0;
@@ -299,7 +290,7 @@ class Result
      ];
      </code>
      */
-    public function getAllErrors()
+    public function getAllErrors(): array
     {
         return $this->getInvalidErrors() + $this->getMissingErrors();
     }
@@ -307,7 +298,7 @@ class Result
     /**
      * Returns all error texts (no assoc)
      *
-     * @return array
+     * @return array|string
      <code>
      $res = [
         'The error text',
@@ -329,12 +320,8 @@ class Result
 
     /**
      * Check this rule against input
-     *
-     * @param string  $input  Input data
-     *
-     * @return bool
      */
-    public function check($data)
+    public function check(array $data): bool
     {
         $this->validAttribs   = [];
         $this->invalidAttribs = [];
@@ -372,7 +359,7 @@ class Result
                 $value = $this->dataFilter->applyFilter('pre', $attrib->applyFilter('pre', $value));
             }
 
-            // successfull check
+            // successful check
             if ($attrib->check($value)) {
                 $this->validAttribs[$attribName] = [
                     'value'  => $attrib->useFilters()

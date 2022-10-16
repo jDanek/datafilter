@@ -8,16 +8,11 @@ namespace DataFilter;
 class ProfileGroup
 {
 
-    /** @var array  */
+    /** @var Profile[]  */
     protected $profiles = [];
     /** @var string */
     protected $currentProfile;
 
-    /**
-     * Constructor for DataFilter\DataFilter
-     *
-     * @param array  $definition  Optional definition
-     */
     public function __construct(array $profiles)
     {
         $this->profiles = [];
@@ -29,43 +24,35 @@ class ProfileGroup
     /**
      * Add named profile
      *
-     * @param string  $profileName  Name of the data filter profile
-     * @param mixed   $profileDef   Either profile definition or profile object
+     * @param string $profileName  Name of the data filter profile
+     * @param mixed   $profileDefinition   Either profile definition or profile object
      */
-    public function addProfile($profileName, $profileDef)
+    public function addProfile(string $profileName, $profileDefinition): void
     {
-        $this->profiles[$profileName] = $profileDef instanceof Profile
-            ? $profileDef
-            : new Profile($profileDef);
+        $this->profiles[$profileName] = $profileDefinition instanceof Profile
+            ? $profileDefinition
+            : new Profile($profileDefinition);
     }
 
     /**
      * Set a current profile
-     *
-     * @param string  $profileName  Name of the data filter profile
-     *
      * @throws \InvalidArgumentException
      */
-    public function setProfile($profileName)
+    public function setProfile(string $profileName): void
     {
         if (!isset($this->profiles[$profileName])) {
             throw new \InvalidArgumentException('Profile "'. $profileName. '" does not exist');
         }
-
         $this->currentProfile = $profileName;
     }
 
     /**
      * Run checks for data on last profile, return result object
-     *
-     * @param array   $data         The data to be parsed
-     * @param string  $profileName  Optional: profile name to use
-     *
+     * @param string|null $profileName  Optional: profile name to use
      * @return Result
-     *
      * @throws \InvalidArgumentException
      */
-    public function run(array $data, $profileName = null)
+    public function run(array $data, ?string $profileName = null)
     {
         if ($profileName) {
             $this->setProfile($profileName);
@@ -78,28 +65,20 @@ class ProfileGroup
 
     /**
      * Runs check for data on last profile, returns bool
-     *
-     * @param array   $data         The data to be parsed
-     * @param string  $profileName  Optional: profile name to use
-     *
-     * @return bool
-     *
+     * @param string|null $profileName  Optional: profile name to use
      * @throws \InvalidArgumentException
      */
-    public function check(array $data, $profileName = null)
+    public function check(array $data, ?string $profileName = null): bool
     {
-        return ! $this->run($data, $profileName)->hasError();
+        return !$this->run($data, $profileName)->hasError();
     }
 
     /**
      * Returns last result of the current profile
-     * @param string  $arg2  Optional: profile name to use
-     *
-     * @return Result
-     *
+     * @param string|null  $profileName  Optional: profile name to use
      * @throws \InvalidArgumentException
      */
-    public function getLastResult($profileName = null)
+    public function getLastResult(?string $profileName = null): Result
     {
         if ($profileName) {
             $this->setProfile($profileName);

@@ -7,12 +7,8 @@ namespace DataFilter\PredefinedFilters;
  */
 class Basic
 {
-    /**
-     * Returns web/url compliant string
-     *
-     * @return callable
-     */
-    public static function filterTrim()
+
+    public static function filterTrim(): callable
     {
         return function ($input) {
             return trim($input);
@@ -21,12 +17,9 @@ class Basic
 
     /**
      * Strips input of HTML tags using the strip_tags() method
-     *
-     * @param string  $allowedTags  Optional string containing all allowed tags.. see strip_tags()
-     *
-     * @return callable
+     * @param string|null $allowedTags  Optional string containing all allowed tags.. see strip_tags()
      */
-    public static function filterStripHtml($allowedTags = null)
+    public static function filterStripTags(?string $allowedTags = null): callable
     {
         return function ($input) use($allowedTags) {
             return strip_tags($input, $allowedTags);
@@ -35,10 +28,8 @@ class Basic
 
     /**
      * Transforms input into a URL-usable string.. "Bla {blub}" -> "bla-blub"
-     *
-     * @return callable
      */
-    public static function filterUrlPart()
+    public static function filterUrlPart(): callable
     {
         return function ($input) {
             return
@@ -52,10 +43,8 @@ class Basic
 
     /**
      * Transforms input into a URL-usable string.. "Bla {blub}" -> "bla-blub" (unicode characters allowed)
-     *
-     * @return callable
      */
-    public static function filterUrlPartUnicode()
+    public static function filterUrlPartUnicode(): callable
     {
         return function ($input) {
             return
@@ -69,10 +58,8 @@ class Basic
 
     /**
      * Transforms input into a lowercase string
-     *
-     * @return callable
      */
-    public static function filterLowercase()
+    public static function filterLowercase(): callable
     {
         return function ($input) {
             return strtolower($input);
@@ -81,15 +68,12 @@ class Basic
 
     /**
      * Transforms input into a uppercase string
-     *
-     * @return callable
      */
-    public static function filterUppercase()
+    public static function filterUppercase(): callable
     {
         return function ($input) {
             return strtoupper($input);
         };
     }
-
 
 }

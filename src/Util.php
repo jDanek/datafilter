@@ -12,12 +12,12 @@ class Util
     /**
      * Formats string by replacing ":variable:" with given values
      *
-     * @param string  $str   Input string
-     * @param array   $args  Variables to be replaced
+     * @param string $str Input string
+     * @param array $args Variables to be replaced
      *
      * @return string
      */
-    public static function formatString($str, $args)
+    public static function formatString(string $str, array $args): string
     {
         foreach ($args as $k => $v) {
             $str = preg_replace('/:'. $k. ':/', $v, $str);
@@ -28,13 +28,8 @@ class Util
 
     /**
      * Flattens input data
-     *
-     * @param string  $str   Input string
-     * @param array   $args  Variables to be replaced
-     *
-     * @return array
      */
-    public static function flatten($data, $flat = [], $prefix = '')
+    public static function flatten(array $data, array $flat = [], string $prefix = ''): array
     {
         foreach ($data as $key => $value) {
 
@@ -49,4 +44,5 @@ class Util
         }
         return $flat;
     }
+
 }

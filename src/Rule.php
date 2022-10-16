@@ -42,15 +42,10 @@ class Rule
     protected $lastValue;
 
     /**
-     * Constructor for DataFilter\Attribute
-     *
-     * @param string                $name        Name of the attrib (unique per data filter)
-     * @param mixed                 $definition  The rule definition
-     * @param Profile $dataFilter  Parental data filter
-     *
+     * @param mixed $definition  The rule definition
      * @throws \InvalidArgumentException
      */
-    public function __construct($name, $definition, Attribute $attribute, Profile $dataFilter)
+    public function __construct(string $name, $definition, Attribute $attribute, Profile $dataFilter)
     {
         $this->name = $name;
         $this->attrib = $attribute;
@@ -67,9 +62,7 @@ class Rule
 
     /**
      * The long description
-     *
      * @param mixed  $definition  The rule definition
-     *
      * @throws \InvalidArgumentException
      */
     protected function parseDefinition($definition = null)
@@ -145,12 +138,8 @@ class Rule
 
     /**
      * Check this rule against input
-     *
-     * @param string  $input  Input data
-     *
-     * @return bool
      */
-    public function check($input)
+    public function check(string $input): bool
     {
         if ($this->lazy) {
             $this->lazy = false;
@@ -166,30 +155,24 @@ class Rule
 
     /**
      * Returns last input value used for check (or determine Dependent)
-     *
-     * @return string
      */
-    public function getLastValue()
+    public function getLastValue(): string
     {
         return $this->lastValue;
     }
 
     /**
      * Returns bool whether this is sufficient
-     *
-     * @return bool
      */
-    public function isSufficient()
+    public function isSufficient(): bool
     {
         return $this->sufficient;
     }
 
     /**
      * Returns error string or null
-     *
-     * @return string
      */
-    public function getError(Attribute $attrib = null)
+    public function getError(Attribute $attrib = null): ?string
     {
         if ($this->error == false) {
             return null;
