@@ -4,10 +4,7 @@ namespace DataFilter\PredefinedFilters;
 
 /**
  * Basic predefined filters
- *
- * @author Ulrich Kautz <ulrich.kautz@gmail.com>
  */
-
 class Basic
 {
     /**

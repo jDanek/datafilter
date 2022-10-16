@@ -6,37 +6,20 @@ namespace DataFilter;
  * Data attribute
  *
  * Attributes are named input parameters with validation rules and filters
- *
- * @author Ulrich Kautz <ulrich.kautz@gmail.com>
  */
-
 class Result
 {
 
-    /**
-     * @var Profile
-     */
+    /** @var Profile  */
     protected $dataFilter;
-
-    /**
-     * @var array
-     */
-    protected $validAttribs;
-
-    /**
-     * @var array
-     */
-    protected $invalidAttribs;
-
-    /**
-     * @var array
-     */
-    protected $missingAttribs;
-
-    /**
-     * @var array
-     */
-    protected $unknownAttribs;
+    /** @var array  */
+    protected $validAttribs = [];
+    /** @var array  */
+    protected $invalidAttribs = [];
+    /** @var array  */
+    protected $missingAttribs = [];
+    /** @var array  */
+    protected $unknownAttribs = [];
 
     /**
      * Constructor for DataFilter\Attribute
@@ -45,7 +28,7 @@ class Result
      * @param mixed                 $definition  The defnition (containing rule and stuff)
      * @param Profile $dataFilter  Parental data filter
      */
-    public function __construct(Profile &$dataFilter)
+    public function __construct(Profile $dataFilter)
     {
         $this->dataFilter = $dataFilter;
     }
@@ -371,7 +354,7 @@ class Result
                         $testName = implode(Util::$FLATTEN_SEPARATOR, array_splice($parts, 0, $i));
                         $attrib   = $this->dataFilter->getAttrib($testName. Util::$FLATTEN_SEPARATOR. '*');
                         if ($attrib) {
-                            break 1;
+                            break;
                         }
                     }
                 }

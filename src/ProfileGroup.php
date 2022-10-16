@@ -4,21 +4,13 @@ namespace DataFilter;
 
 /**
  * Filter profiles
- *
- * @author Ulrich Kautz <ulrich.kautz@gmail.com>
  */
-
 class ProfileGroup
 {
 
-    /**
-     * @var array
-     */
-    protected $profiles;
-
-    /**
-     * @var string
-     */
+    /** @var array  */
+    protected $profiles = [];
+    /** @var string */
     protected $currentProfile;
 
     /**

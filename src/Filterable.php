@@ -4,22 +4,14 @@ namespace DataFilter;
 
 /**
  * Basic predefined validation rules
- *
- * @author Ulrich Kautz <ulrich.kautz@gmail.com>
  */
-
 abstract class Filterable
 {
 
-    /**
-     * @var array
-     */
-    protected $preFilters;
-
-    /**
-     * @var array
-     */
-    protected $postFilters;
+    /** @var array  */
+    protected $preFilters = [];
+    /** @var array  */
+    protected $postFilters = [];
 
     /**
      * Add multiple filters at once
@@ -50,7 +42,7 @@ abstract class Filterable
         // add all filters
         foreach ($filters as $num => $filter) {
 
-            // callable, not clsure
+            // callable, not closure
             if (is_callable($filter) && is_array($filter)) { // && !($filter instanceof \Closure)) {
                 $cb = $filter;
                 $filter = function($in) use($cb) {

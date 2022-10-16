@@ -6,70 +6,39 @@ namespace DataFilter;
  * Data attribute
  *
  * Attributes are named input parameters with validation rules and filters
- *
- * @author Ulrich Kautz <ulrich.kautz@gmail.com>
  */
-
 class Rule
 {
-    /**
-     * @var array
-     */
+
+    /** @var array  */
     protected static $DEFAULT_ATTRIBS = [
         'sufficient' => false,
         'skipEmpty'  => false,
         'constraint' => null,
         'error'      => null,
     ];
-
-    /**
-     * @var Profile
-     */
+    /** @var Profile */
     protected $dataFilter;
-
-    /**
-     * @var Attribute
-     */
+    /** @var Attribute */
     protected $attrib;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $name;
-
-    /**
-     * @var callable (func ref)
-     */
+    /** @var callable (func ref) */
     protected $constraint;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $error;
-
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $sufficient = false;
-
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $skipEmpty = false;
-
-    /**
-     * @var bool
-     */
+    /** @var bool  */
     protected $lazy = false;
 
     /**
      * @var bool
      */
     protected $definition = null;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $lastValue;
 
     /**
@@ -81,7 +50,7 @@ class Rule
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($name, $definition, Attribute &$attribute, Profile &$dataFilter)
+    public function __construct($name, $definition, Attribute $attribute, Profile $dataFilter)
     {
         $this->name = $name;
         $this->attrib = $attribute;
@@ -222,7 +191,7 @@ class Rule
      */
     public function getError(Attribute $attrib = null)
     {
-        if ($this->error === false) {
+        if ($this->error == false) {
             return null;
         }
         if (!$attrib) {

@@ -6,16 +6,11 @@ namespace DataFilter;
  * Data attribute
  *
  * Attributes are named input parameters with validation rules and filters
- *
- * @author Ulrich Kautz <ulrich.kautz@gmail.com>
  */
-
 class Attribute extends Filterable
 {
 
-    /**
-     * @var array
-     */
+    /** @var array  */
     protected static $DEFAULT_ATTRIBS = [
         'required'       => false,
         'matchAny'       => false,
@@ -29,79 +24,41 @@ class Attribute extends Filterable
         'postFilters'    => [],
     ];
 
-    /**
-     * @var Profile
-     */
+    /** @var Profile  */
     protected $dataFilter;
-
-    /**
-     * @var string
-     */
+    /** @var string  */
     protected $name;
-
-    /**
-     * @var bool
-     */
+    /** @var bool  */
     protected $required = false;
-
-    /**
-     * @var bool
-     */
+    /** @var bool  */
     protected $matchAny = false;
-
-    /**
-     * @var bool
-     */
+    /** @var bool  */
     public $noFilters = false;
-
-    /**
-     * @var string
-     */
+    /** @var string  */
     public $default = null;
-
-    /**
-     * @var string
-     */
+    /** @var string  */
     public $missing = null;
-
-    /**
-     * @var string
-     */
+    /** @var string  */
     public $error = null;
-
-    /**
-     * @var array
-     */
-    protected $rules;
-
-    /**
-     * @var array
-     */
-    protected $dependent;
-
-    /**
-     * @var array
-     */
-    protected $dependentRegex;
-
-    /**
-     * @var Rule
-     */
+    /** @var array  */
+    protected $rules = [];
+    /** @var array  */
+    protected $dependent = [];
+    /** @var array  */
+    protected $dependentRegex = [];
+    /** @var Rule */
     protected $failedRule;
-
-    /**
-     * @var string
-     */
+    /** @var string  */
     protected $lastValue;
 
     /**
      * Constructor for DataFilter\Attribute
      *
      * @param string                $name        Name of the attrib (unique per data filter)
-     * @param mixed                 $definition  The defnition (containing rule and stuff)
+     * @param mixed                 $definition  The definition (containing rule and stuff)
      * @param Profile $dataFilter  Parental data filter
      */
-    public function __construct($name, $definition, Profile &$dataFilter)
+    public function __construct($name, $definition, Profile $dataFilter)
     {
         $this->name = $name;
         $this->dataFilter = $dataFilter;
@@ -129,12 +86,12 @@ class Attribute extends Filterable
         // complex..
         else {
 
-            // from string or callable (simple, optioanl)
+            // from string or callable (simple, optional)
             if (is_string($definition) || is_callable($definition)) {
                 $definition = ['rules' => ['default' => $definition]];
             }
 
-            // init empty to reduce isset checks..
+            // init empty to reduce isset checks...
             $definition = array_merge(self::$DEFAULT_ATTRIBS, $definition);
 
             // set attribs
@@ -200,7 +157,7 @@ class Attribute extends Filterable
      */
     public function getRule($ruleName)
     {
-        return isset($this->rules[$ruleName]) ? $this->rules[$ruleName] : null;
+        return $this->rules[$ruleName] ?? null;
     }
 
     /**
@@ -353,7 +310,7 @@ class Attribute extends Filterable
      */
     public function hasError()
     {
-        return $this->failedRule ? true : false;
+        return (bool)$this->failedRule;
     }
 
     /**

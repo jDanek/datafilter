@@ -4,10 +4,7 @@ namespace DataFilter;
 
 /**
  * Utilities for data filter
- *
- * @author Ulrich Kautz <ulrich.kautz@gmail.com>
  */
-
 class Util
 {
     public static $FLATTEN_SEPARATOR = '.';

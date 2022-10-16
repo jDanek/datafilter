@@ -134,59 +134,28 @@ else {
 }
 
 </code>
- *
- * @author Ulrich Kautz <ulrich.kautz@gmail.com>
  */
-
 class Profile extends Filterable
 {
-
-    /**
-     * @const string
-     */
     const DEFAULT_ERROR = 'Attribute ":attrib:" does not match ":rule:"';
-
-    /**
-     * @const string
-     */
     const DEFAULT_MISSING = 'Attribute ":attrib:" is missing';
 
-
-    /**
-     * @var array
-     */
-    protected $attribs;
-
-    /**
-     * @var array
-     */
+    /** @var array  */
+    protected $attribs=[];
+    /** @var array  */
     protected $predefinedRuleClasses = [
         PredefinedRules\Basic::class
     ];
-
-    /**
-     * @var array
-     */
+    /** @var array  */
     protected $predefinedFilterClasses = [
         PredefinedFilters\Basic::class
     ];
-
-    /**
-     * @var string
-     */
+    /** @var string  */
     protected $errorTemplate = self::DEFAULT_ERROR;
-
-    /**
-     * @var string
-     */
+    /** @var string  */
     protected $missingTemplate = self::DEFAULT_MISSING;
-
-    /**
-     * @var Result
-     */
+    /** @var Result */
     protected $lastResult;
-
-
 
     /**
      * Constructor for DataFilter\DataFilter
@@ -300,7 +269,7 @@ class Profile extends Filterable
      */
     public function getAttrib($attribName)
     {
-        return isset($this->attribs[$attribName]) ? $this->attribs[$attribName] : null;
+        return $this->attribs[$attribName] ?? null;
     }
 
     /**

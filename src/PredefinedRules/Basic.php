@@ -4,10 +4,7 @@ namespace DataFilter\PredefinedRules;
 
 /**
  * Basic predefined validation rules
- *
- * @author Ulrich Kautz <ulrich.kautz@gmail.com>
  */
-
 class Basic
 {
 

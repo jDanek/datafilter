@@ -13,12 +13,13 @@
         {
             "name": "Ulrich Kautz",
             "email": "uk@fortrabbit.de",
-            "homepage": "http://fortrabbit.com/",
+            "homepage": "https://fortrabbit.com/",
             "role": "Library Developer"
         }
     ],
     "require": {
-        "php": ">=7.1.0"
+        "php": ">=7.1.0",
+      "ext-json": "*"
     },
     "autoload": {
         "psr-4": {
