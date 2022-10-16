@@ -1,22 +1,28 @@
 {
-    "name": "datafilter/datafilter",
-    "version": "0.1.5-dev",
+    "name": "danek/datafilter",
     "type": "library",
     "description": "Data filtering and validation",
     "keywords": ["validation", "sanitation"],
-    "homepage": "http://github.com/fortrabbit/datafilter",
     "license": "MIT",
     "authors": [
         {
+            "name": "Jirka Daněk",
+            "homepage": "https://jdanek.eu",
+            "role": "Fork developer"
+        },
+        {
             "name": "Ulrich Kautz",
             "email": "uk@fortrabbit.de",
-            "homepage": "http://fortrabbit.com/"
+            "homepage": "http://fortrabbit.com/",
+            "role": "Library Developer"
         }
     ],
     "require": {
-        "php": ">=5.3.0"
+        "php": ">=7.1.0"
     },
     "autoload": {
-        "psr-0": { "DataFilter": "src/" }
+        "psr-0": {
+            "DataFilter": "src"
+        }
     }
 }
