@@ -13,13 +13,13 @@ class Result
     /** @var Profile  */
     protected $dataFilter;
     /** @var array  */
-    protected $validAttribs = [];
+    protected $validAttributes = [];
     /** @var array  */
-    protected $invalidAttribs = [];
+    protected $invalidAttributes = [];
     /** @var array  */
-    protected $missingAttribs = [];
+    protected $missingAttributes = [];
     /** @var array  */
-    protected $unknownAttribs = [];
+    protected $unknownAttributes = [];
 
     /**
      * @param Profile $dataFilter  Parental data filter
@@ -40,13 +40,13 @@ class Result
      ];
      </code>
      */
-    public function getValidAttribs(): array
+    public function getValidAttributes(): array
     {
         return array_combine(
-            array_keys($this->validAttribs),
+            array_keys($this->validAttributes),
             array_map(function ($ref) {
-                return $ref['attrib'];
-            }, array_values($this->validAttribs))
+                return $ref['attribute'];
+            }, array_values($this->validAttributes))
         );
     }
 
@@ -64,10 +64,10 @@ class Result
     public function getValidData(): array
     {
         return array_combine(
-            array_keys($this->validAttribs),
+            array_keys($this->validAttributes),
             array_map(function ($ref) {
                 return $ref['value'];
-            }, array_values($this->validAttribs))
+            }, array_values($this->validAttributes))
         );
     }
 
@@ -82,13 +82,13 @@ class Result
      ];
      </code>
      */
-    public function getInvalidAttribs(): array
+    public function getInvalidAttributes(): array
     {
         return array_combine(
-            array_keys($this->invalidAttribs),
+            array_keys($this->invalidAttributes),
             array_map(function ($ref) {
-                return $ref['attrib'];
-            }, array_values($this->invalidAttribs))
+                return $ref['attribute'];
+            }, array_values($this->invalidAttributes))
         );
     }
 
@@ -106,15 +106,15 @@ class Result
     public function getInvalidData(): array
     {
         return array_combine(
-            array_keys($this->invalidAttribs),
+            array_keys($this->invalidAttributes),
             array_map(function ($ref) {
                 return $ref['value'];
-            }, array_values($this->invalidAttribs))
+            }, array_values($this->invalidAttributes))
         );
     }
 
     /**
-     * Returns all errors for invalid attribs
+     * Returns all errors for invalid attributes
      *
      * @return array
      <code>
@@ -127,10 +127,10 @@ class Result
     public function getInvalidErrors(): array
     {
         return array_combine(
-            array_keys($this->invalidAttribs),
+            array_keys($this->invalidAttributes),
             array_map(function ($ref) {
                 return $ref['error'];
-            }, array_values($this->invalidAttribs))
+            }, array_values($this->invalidAttributes))
         );
     }
 
@@ -145,13 +145,13 @@ class Result
      ];
      </code>
      */
-    public function getMissingAttribs(): array
+    public function getMissingAttributes(): array
     {
         return array_combine(
-            array_keys($this->missingAttribs),
+            array_keys($this->missingAttributes),
             array_map(function ($ref) {
-                return $ref['attrib'];
-            }, array_values($this->missingAttribs))
+                return $ref['attribute'];
+            }, array_values($this->missingAttributes))
         );
     }
 
@@ -169,10 +169,10 @@ class Result
     public function getMissingErrors(): array
     {
         return array_combine(
-            array_keys($this->missingAttribs),
+            array_keys($this->missingAttributes),
             array_map(function ($ref) {
                 return $ref['error'];
-            }, array_values($this->missingAttribs))
+            }, array_values($this->missingAttributes))
         );
     }
 
@@ -189,7 +189,7 @@ class Result
      */
     public function getInvalidOrMissingErrors(): array
     {
-        $all = $this->invalidAttribs + $this->missingAttribs;
+        $all = $this->invalidAttributes + $this->missingAttributes;
         return array_combine(
             array_keys($all),
             array_map(function ($ref) {
@@ -211,7 +211,7 @@ class Result
      */
     public function getUnknownData(): array
     {
-        return $this->unknownAttribs;
+        return $this->unknownAttributes;
     }
 
     /**
@@ -227,41 +227,41 @@ class Result
      */
     public function getAllData(): array
     {
-        return $this->getValidData() + $this->getInvalidData() + $this->unknownAttribs;
+        return $this->getValidData() + $this->getInvalidData() + $this->unknownAttributes;
     }
 
     /**
-     * Returns attribute of named attrib if existing (either valid or invalid)
+     * Returns attribute of named attribute if existing (either valid or invalid)
      *
      * @param string $attribName  Name of the attrib
      *
      * @return Attribute
      */
-    public function getAttrib(string $attribName): ?Attribute
+    public function getAttribute(string $attribName): ?Attribute
     {
-        if (isset($this->validAttribs[$attribName])) {
-            return $this->validAttribs[$attribName]['attrib'];
+        if (isset($this->validAttributes[$attribName])) {
+            return $this->validAttributes[$attribName]['attribute'];
         }
-        elseif (isset($this->invalidAttribs[$attribName])) {
-            return $this->invalidAttribs[$attribName]['attrib'];
+        elseif (isset($this->invalidAttributes[$attribName])) {
+            return $this->invalidAttributes[$attribName]['attribute'];
         }
         return null;
     }
 
     /**
-     * Returns value of named attrib if existing (either valid, invalid or unknown)
+     * Returns value of named attribute if existing (either valid, invalid or unknown)
      * @return string
      */
     public function getData(string $attribName): ?string
     {
-        if (isset($this->validAttribs[$attribName])) {
-            return $this->validAttribs[$attribName]['value'];
+        if (isset($this->validAttributes[$attribName])) {
+            return $this->validAttributes[$attribName]['value'];
         }
-        elseif (isset($this->invalidAttribs[$attribName])) {
-            return $this->invalidAttribs[$attribName]['value'];
+        elseif (isset($this->invalidAttributes[$attribName])) {
+            return $this->invalidAttributes[$attribName]['value'];
         }
-        elseif (isset($this->unknownAttribs[$attribName])) {
-            return $this->unknownAttribs[$attribName];
+        elseif (isset($this->unknownAttributes[$attribName])) {
+            return $this->unknownAttributes[$attribName];
         }
         return null;
     }
@@ -273,9 +273,9 @@ class Result
     public function hasError(string $attribName = null): bool
     {
         if (is_null($attribName)) {
-            return count($this->invalidAttribs) > 0 || count($this->missingAttribs) > 0;
+            return count($this->invalidAttributes) > 0 || count($this->missingAttributes) > 0;
         } else {
-            return isset($this->invalidAttribs[$attribName]) || isset($this->missingAttribs[$attribName]);
+            return isset($this->invalidAttributes[$attribName]) || isset($this->missingAttributes[$attribName]);
         }
     }
 
@@ -323,84 +323,87 @@ class Result
      */
     public function check(array $data): bool
     {
-        $this->validAttribs   = [];
-        $this->invalidAttribs = [];
-        $this->missingAttribs = [];
-        $this->unknownAttribs = [];
+        $this->validAttributes   = [];
+        $this->invalidAttributes = [];
+        $this->missingAttributes = [];
+        $this->unknownAttributes = [];
         $requiredDependent    = [];
         $seenAttrib           = [];
 
-        foreach (Util::flatten($data) as $attribName => $value) {
-            $attrib = $this->dataFilter->getAttrib($attribName);
-            if (!$attrib) {
-                $parts = explode(Util::$FLATTEN_SEPARATOR, $attribName);
+        foreach (Util::flatten($data) as $attributeName => $value) {
+            $attribute = $this->dataFilter->getAttribute($attributeName);
+            if (!$attribute) {
+                $parts = explode(Util::$FLATTEN_SEPARATOR, $attributeName);
                 $count = count($parts);
                 if ($count > 1) {
 
                     for ($i = $count -1; $i >= 1; $i--) {
                         $testName = implode(Util::$FLATTEN_SEPARATOR, array_splice($parts, 0, $i));
-                        $attrib   = $this->dataFilter->getAttrib($testName. Util::$FLATTEN_SEPARATOR. '*');
-                        if ($attrib) {
+                        $attribute   = $this->dataFilter->getAttribute($testName. Util::$FLATTEN_SEPARATOR. '*');
+                        if ($attribute) {
                             break;
                         }
                     }
                 }
             }
-            $seenAttrib[$attribName] = true;
+            $seenAttrib[$attributeName] = true;
 
             // unknown attrib
-            if (!$attrib) {
-                $this->unknownAttribs[$attribName] = $this->dataFilter->applyFilter('pre', $value);
+            if (!$attribute) {
+                $this->unknownAttributes[$attributeName] = $this->dataFilter->applyFilter(Filterable::POSITION_PRE, $value);
                 continue;
             }
 
             // run pre-filters
-            if ($attrib->useFilters()) {
-                $value = $this->dataFilter->applyFilter('pre', $attrib->applyFilter('pre', $value));
+            if ($attribute->useFilters()) {
+                $value = $this->dataFilter->applyFilter(Filterable::POSITION_PRE, $attribute->applyFilter(Filterable::POSITION_PRE, $value));
             }
 
             // successful check
-            if ($attrib->check($value)) {
-                $this->validAttribs[$attribName] = [
-                    'value'  => $attrib->useFilters()
-                        ? $this->dataFilter->applyFilter('post', $attrib->applyFilter('post', $value))
+            if ($attribute->check($value)) {
+                $this->validAttributes[$attributeName] = [
+                    'value'  => $attribute->useFilters()
+                        ? $this->dataFilter->applyFilter(Filterable::POSITION_POST, $attribute->applyFilter(Filterable::POSITION_POST, $value))
                         : $value,
-                    'attrib' => &$attrib
+                    'attribute' => &$attribute
                 ];
 
                 // determine possible dependents
-                $attrib->determineDependents($value, $requiredDependent);
+                $attribute->determineDependents($value, $requiredDependent);
             }
 
             // checks failed
             else {
-                $this->invalidAttribs[$attribName] = [
+                $this->invalidAttributes[$attributeName] = [
                     'value'  => $value,
-                    'attrib' => &$attrib,
-                    'error'  => $attrib->getError()
+                    'attribute' => &$attribute,
+                    'error'  => $attribute->getError()
                 ];
             }
         }
 
-        // check now all attribs for required
-        foreach ($this->dataFilter->getAttribs() as $attribName => $attrib) {
+        // check now all attributes for required
+        foreach ($this->dataFilter->getAttributes() as $attributeName => $attribute) {
 
             // already seen
-            if (isset($seenAttrib[$attribName])) {
+            if (isset($seenAttrib[$attributeName])) {
                 continue;
             }
 
             // has default
-            elseif (!is_null($default = $attrib->getDefault())) {
-                $this->validAttribs[$attribName] = ['value' => $default, 'attrib' => &$attrib];
+            elseif (!is_null($default = $attribute->getDefault())) {
+                $this->validAttributes[$attributeName] = [
+                    'value' => $default,
+                    'attribute' => &$attribute
+                ];
             }
 
             // required -> missing
-            elseif ($attrib->isRequired() || isset($requiredDependent[$attribName])) {
-                $parts = explode(Util::$FLATTEN_SEPARATOR, $attribName);
+            elseif ($attribute->isRequired() || isset($requiredDependent[$attributeName])) {
+                $parts = explode(Util::$FLATTEN_SEPARATOR, $attributeName);
                 $count = count($parts);
                 if ($count > 1 && $parts[$count-1] === '*') {
-                    $before = implode(Util::$FLATTEN_SEPARATOR, array_splice($parts, 0, $count - 1)). Util::$FLATTEN_SEPARATOR;
+                    $before = implode(Util::$FLATTEN_SEPARATOR, array_splice($parts, 0, $count - 1)) . Util::$FLATTEN_SEPARATOR;
                     $seen   = array_filter(array_keys($seenAttrib), function ($check) use ($before) {
                         return strpos($check, $before) === 0;
                     });
@@ -408,15 +411,12 @@ class Result
                         continue;
                     }
                 }
-                $this->missingAttribs[$attribName] = [
-                    'attrib' => &$attrib,
-                    'error'  => $attrib->getMissingText()
+                $this->missingAttributes[$attributeName] = [
+                    'attribute' => &$attribute,
+                    'error'  => $attribute->getMissingText()
                 ];
             }
         }
-
-        /*error_log("INVALID: ". count($this->invalidAttribs));
-        error_log("MISSING: ". count($this->missingAttribs));*/
         return !$this->hasError();
     }
 

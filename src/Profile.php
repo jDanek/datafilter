@@ -8,7 +8,7 @@ namespace DataFilter;
 <code>
 
 $df = new \DataFilter\Profile([
-    'attribs' => [
+    'attributes' => [
         'attribName' => [
 
             // make required
@@ -29,7 +29,7 @@ $df = new \DataFilter\Profile([
                 // user defined callback (func ref)
                 'someCallback' => [
                     'constraint' => function($input, $attrib, $rule, $dataFilter) {
-                        error_log("I am in rule ". $rule->getName(). " for attrib ". $attrib->getName());
+                        error_log("I am in rule ". $rule->getName(). " for attribute ". $attrib->getName());
                         return strlen($input) < 5;
                     },
                     'error'      => 'Input for :attrib: is to long',
@@ -57,7 +57,7 @@ $df = new \DataFilter\Profile([
 
             ],
 
-            // make other attribs required via dependencies
+            // make other attributes required via dependencies
             'dependent' => [
 
                 // if "a123" matches
@@ -67,7 +67,7 @@ $df = new \DataFilter\Profile([
                 '*' => ['otherAttrib']
             ],
 
-            // make other attribs required via dependencies (regex)
+            // make other attributes required via dependencies (regex)
             'dependentRegex' => [
                 '/^(a1)[234]/' => ['otherAttrib'],
             ],
@@ -87,7 +87,7 @@ $df = new \DataFilter\Profile([
             ]
         ],
 
-        // an optional attrib with a constraint
+        // an optional attribute with a constraint
         'fooBar' => 'Regex:/^foo/',
 
         // a required attrib, no validation
@@ -137,11 +137,11 @@ else {
  */
 class Profile extends Filterable
 {
-    const DEFAULT_ERROR = 'Attribute ":attrib:" does not match ":rule:"';
-    const DEFAULT_MISSING = 'Attribute ":attrib:" is missing';
+    public const DEFAULT_ERROR = 'Attribute ":attribute:" does not match ":rule:"';
+    public const DEFAULT_MISSING = 'Attribute ":attribute:" is missing';
 
     /** @var array  */
-    protected $attribs=[];
+    protected $attributes = [];
     /** @var array  */
     protected $predefinedRuleClasses = [
         PredefinedRules\Basic::class
@@ -171,21 +171,21 @@ class Profile extends Filterable
                 foreach ($definition[$var] as $addClass) {
                     array_push($this->{$accessor}, $addClass);
                 }
-                array_unique($this->$accessor);
+                array_unique($this->{$accessor});
             }
         }
         if (isset($definition['preFilters'])) {
-            $this->addFilters('pre', $definition['preFilters']);
+            $this->addFilters(Filterable::POSITION_PRE, $definition['preFilters']);
         }
         if (isset($definition['postFilters'])) {
-            $this->addFilters('post', $definition['postFilters']);
+            $this->addFilters(Filterable::POSITION_POST, $definition['postFilters']);
         }
-        if (isset($definition['attribs'])) {
-            $this->setAttribs($definition['attribs']);
+        if (isset($definition['attributes'])) {
+            $this->setAttributes($definition['attributes']);
         } elseif (isset($definition['attributes'])) {
-            $this->setAttribs($definition['attributes']);
+            $this->setAttributes($definition['attributes']);
         } else {
-            $this->attribs = [];
+            $this->attributes = [];
         }
     }
 
@@ -216,13 +216,13 @@ class Profile extends Filterable
     }
 
     /**
-     * Set (replace/add) multiple named attribs at once
+     * Set (replace/add) multiple named attributes at once
      * @param array $definition  Attrib/rule definition
      */
-    public function setAttribs(array $definition): void
+    public function setAttributes(array $definition): void
     {
         foreach ($definition as $name => $def) {
-            $this->setAttrib($name, $def);
+            $this->setAttribute($name, $def);
         }
     }
 
@@ -231,37 +231,37 @@ class Profile extends Filterable
      * Set (replace/add) a named attribute. Returns the new attrib
      * @param mixed   $definition  Attrib/rule definition or \DataFilter\Attribute object
      */
-    public function setAttrib(string $name, $definition = null): Attribute
+    public function setAttribute(string $name, $definition = null): Attribute
     {
-        $this->attribs[$name] = is_object($definition) && $definition instanceof Attribute
+        $this->attributes[$name] = $definition instanceof Attribute
             ? $definition
             : new Attribute($name, $definition, $this);
-        return $this->attribs[$name];
+        return $this->attributes[$name];
     }
 
     /**
      * Returns list of attributes (assoc array)
      */
-    public function getAttribs(): array
+    public function getAttributes(): array
     {
-        return $this->attribs;
+        return $this->attributes;
     }
 
     /**
      * Returns single attribute by name (or null)
      */
-    public function getAttrib(string $name): ?Attribute
+    public function getAttribute(string $name): ?Attribute
     {
-        return $this->attribs[$name] ?? null;
+        return $this->attributes[$name] ?? null;
     }
 
     /**
      * Removes a single attribute by name
      */
-    public function removeAttrib(string $name): bool
+    public function removeAttribute(string $name): bool
     {
-        if (isset($this->attribs[$name])) {
-            unset($this->attribs[$name]);
+        if (isset($this->attributes[$name])) {
+            unset($this->attributes[$name]);
             return true;
         }
         return false;

@@ -7,6 +7,8 @@ namespace DataFilter;
  */
 abstract class Filterable
 {
+    public const POSITION_PRE = 'pre';
+    public const POSITION_POST = 'post';
 
     /** @var array  */
     protected $preFilters = [];
@@ -16,7 +18,7 @@ abstract class Filterable
     /**
      * Add multiple filters at once
      *
-     * @param string $position  Either "pre" or "post"
+     * @param string $position see Filterable::POSITION_*
      * @param array $filters   List of filters
      *
      * @throws \InvalidArgumentException
@@ -24,8 +26,13 @@ abstract class Filterable
     public function addFilters(string $position, array $filters): void
     {
         // oops, invalid position
-        if (!in_array($position, ['pre', 'post'])) {
-            throw new \InvalidArgumentException("Cannot add filters to '$position'. Use 'pre' or 'post'");
+        if (!in_array($position, [self::POSITION_PRE, self::POSITION_POST])) {
+            throw new \InvalidArgumentException(sprintf(
+                "Cannot add filters to '%s'. Use '%s' or '%s'",
+                $position,
+                self::POSITION_PRE,
+                self::POSITION_POST
+            ));
         }
 
         // single filter
@@ -58,6 +65,7 @@ abstract class Filterable
                 $args = $this instanceof Profile
                     ? [null, $this]               // data filter
                     : [$this, $this->dataFilter]; // attribute
+
                 foreach ($df->getPredefinedFilterClasses() as $className) {
                     if (is_callable($className, $method) && method_exists($className, $method)) {
                         $foundFilter = true;
@@ -68,20 +76,25 @@ abstract class Filterable
                 if (!$foundFilter) {
                     $filterName = $this instanceof Profile
                         ? 'global '. $position. '-filter'
-                        : 'rule "'. $this->name. '", attrib "'. $this->attrib->getName(). '"'
+                        : 'rule "'. $this->name. '", attribute "'. $this->attrib->getName(). '"'
                             . ' as '. $position. '-filter';
-                    throw new \InvalidArgumentException(
-                        'Could not use filter "'. $filter. '" for '. $filterName. ' because no '
-                        . 'predefined filter class found implementing "'. $method. '()"'
-                    );
+
+                    throw new \InvalidArgumentException(sprintf(
+                        "Could not use filter '%s' for '%s' because no predefined filter class found implementing '%s()'",
+                        $filter,
+                        $filterName,
+                        $method
+                    ));
                 }
             }
 
             // oops, invalild filter
             if (!is_callable($filter)) {
-                throw new \InvalidArgumentException(
-                    "Filter '$num' for attribute '". $this->name. "' is not a callable!"
-                );
+                throw new \InvalidArgumentException(sprintf(
+                    "Filter '%d' for attribute '%s' is not a callable!",
+                    $num,
+                    $this->name
+                ));
             }
             // convert oldschool filter to closure
             if (!($filter instanceof \Closure)) {
@@ -102,7 +115,7 @@ abstract class Filterable
      */
     public function addPreFilters(array $filters): void
     {
-        $this->addFilters('pre', $filters);
+        $this->addFilters(self::POSITION_PRE, $filters);
     }
 
     /**
@@ -111,14 +124,14 @@ abstract class Filterable
      */
     public function addPostFilters(array $filters): void
     {
-        $this->addFilters('post', $filters);
+        $this->addFilters(self::POSITION_POST, $filters);
     }
 
 
     /**
      * Runs filter on input
      *
-     * @param string $position  Either "pre" or "post"
+     * @param string $position  see Filterable::POSITION_*
      * @param string $input     The input
      *
      * @return string
@@ -128,18 +141,23 @@ abstract class Filterable
     public function applyFilter(string $position, string $input): string
     {
         // oops, invalid position
-        if (!in_array($position, ['pre', 'post'])) {
-            throw new \InvalidArgumentException("Cannot add filters to '$position'. Use 'pre' or 'post'");
+        if (!in_array($position, [self::POSITION_PRE, self::POSITION_POST])) {
+            throw new \InvalidArgumentException(sprintf(
+                "Cannot add filters to '%s'. Use '%s' or '%s'",
+                $position,
+                self::POSITION_PRE,
+                self::POSITION_POST
+            ));
         }
 
         // determine accessor
-        $var = $position. 'Filters';
+        $accessor = $position. 'Filters';
 
-        if (!$this->{$var}) {
+        if (!$this->{$accessor}) {
             return $input;
         }
 
-        foreach ($this->{$var} as $filter) {
+        foreach ($this->{$accessor} as $filter) {
             $input = $filter($input);
         }
         return $input;

@@ -11,7 +11,7 @@ class Attribute extends Filterable
 {
 
     /** @var array  */
-    protected static $DEFAULT_ATTRIBS = [
+    protected static $DEFAULT_ATTRIBUTES = [
         'required'       => false,
         'matchAny'       => false,
         'default'        => null,
@@ -78,9 +78,9 @@ class Attribute extends Filterable
             }
 
             // init empty to reduce isset checks...
-            $definition = array_merge(self::$DEFAULT_ATTRIBS, $definition);
+            $definition = array_merge(self::$DEFAULT_ATTRIBUTES, $definition);
 
-            // set attribs
+            // set attributes
             foreach (['required', 'matchAny', 'noFilters', 'default', 'dependent', 'dependentRegex', 'missing', 'error'] as $k) {
                 if (isset($definition[$k])) {
                     $this->{$k} = $definition[$k];
@@ -91,8 +91,8 @@ class Attribute extends Filterable
             $this->setRules($definition['rules']);
 
             // add all filter
-            $this->addFilters('pre', $definition['preFilters']);
-            $this->addFilters('post', $definition['postFilters']);
+            $this->addFilters(Filterable::POSITION_PRE, $definition['preFilters']);
+            $this->addFilters(Filterable::POSITION_POST, $definition['postFilters']);
         }
     }
 
@@ -112,7 +112,7 @@ class Attribute extends Filterable
      */
     public function setRule(string $name, $definition): Rule
     {
-        $this->rules[$name] = is_object($definition) && $definition instanceof Rule
+        $this->rules[$name] = $definition instanceof Rule
             ? $definition
             : new Rule($name, $definition, $this, $this->dataFilter);
         return $this->rules[$name];
@@ -275,7 +275,7 @@ class Attribute extends Filterable
     {
         $missing = $this->missing ?: $this->dataFilter->getMissingTemplate();
         return Util::formatString($missing, [
-            'attrib' => $this->name
+            'attribute' => $this->name
         ]);
     }
 

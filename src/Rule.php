@@ -11,7 +11,7 @@ class Rule
 {
 
     /** @var array  */
-    protected static $DEFAULT_ATTRIBS = [
+    protected static $DEFAULT_ATTRIBUTES = [
         'sufficient' => false,
         'skipEmpty'  => false,
         'constraint' => null,
@@ -20,7 +20,7 @@ class Rule
     /** @var Profile */
     protected $dataFilter;
     /** @var Attribute */
-    protected $attrib;
+    protected $attribute;
     /** @var string */
     protected $name;
     /** @var callable (func ref) */
@@ -48,7 +48,7 @@ class Rule
     public function __construct(string $name, $definition, Attribute $attribute, Profile $dataFilter)
     {
         $this->name = $name;
-        $this->attrib = $attribute;
+        $this->attribute = $attribute;
         $this->dataFilter = $dataFilter;
 
         if (is_array($definition) && isset($definition['lazy']) && $definition['lazy'] === true) {
@@ -69,10 +69,11 @@ class Rule
     {
         if (is_null($definition)) {
             if (!is_null($this->definition)) {
-                throw new \InvalidArgumentException(
-                    'Cannot parse rule definitions for rule "'. $this->name. '", attrib "'
-                    . $this->attrib->getName(). '" without definition!'
-                );
+                throw new \InvalidArgumentException(sprintf(
+                    "Cannot parse rule definitions for rule '%s', attribute '%s' without definition!",
+                    $this->name,
+                    $this->attribute->getName()
+                ));
             }
             $definition = $this->definition;
             $this->definition = null;
@@ -84,9 +85,9 @@ class Rule
         }
 
         // init empty to reduce isset checks..
-        $definition = array_merge(self::$DEFAULT_ATTRIBS, $definition);
+        $definition = array_merge(self::$DEFAULT_ATTRIBUTES, $definition);
 
-        // set attribs
+        // set attributes
         $this->sufficient = $definition['sufficient'];
         $this->skipEmpty  = $definition['skipEmpty'];
         $this->error      = $definition['error'];
@@ -113,11 +114,13 @@ class Rule
                 }
             }
             if (!$found) {
-                throw new \InvalidArgumentException(
-                    'Could not use constraint "'. $definition['constraint']. '" for rule "'
-                    . $this->name. '", attrib "'. $this->attrib->getName(). '" because no '
-                    . 'predefined rule class found implementing "'. $method. '()"'
-                );
+                throw new \InvalidArgumentException(sprintf(
+                    "Could not use constraint '%s' for rule '%s', attribute '%s' because no predefined rule class found implementing '%s()'",
+                    $definition['constraint'],
+                    $this->name,
+                    $this->attribute->getName(),
+                    $method
+                ));
             }
         }
 
@@ -128,10 +131,12 @@ class Rule
 
         // at this point: it has to be a closure!
         if ($constraintClass !== 'Closure') {
-            throw new \InvalidArgumentException(
-                'Definition for rule "'. $this->name. '", attrib "'. $this->attrib->getName(). '"'
-                . ' has an invalid constraint of class '. $constraintClass
-            );
+            throw new \InvalidArgumentException(sprintf(
+                "Definition for rule '%s', attribute '%s' has an invalid constraint of class '%s'",
+                $this->name,
+                $this->attribute->getName(),
+                $constraintClass
+            ));
         }
         $this->constraint = $definition['constraint'];
     }
@@ -150,7 +155,7 @@ class Rule
             return true;
         }
         $constraint = $this->constraint;
-        return $constraint($input, $this, $this->attrib, $this->dataFilter);
+        return $constraint($input, $this, $this->attribute, $this->dataFilter);
     }
 
     /**
@@ -178,11 +183,11 @@ class Rule
             return null;
         }
         if (!$attrib) {
-            $attrib = $this->attrib;
+            $attrib = $this->attribute;
         }
         $formatData = ['rule' => $this->name];
         if ($attrib) {
-            $formatData['attrib'] = $attrib->getName();
+            $formatData['attribute'] = $attrib->getName();
         }
         $error = $this->error;
         if (!$error && $attrib) {
