@@ -150,41 +150,19 @@ class Profile extends Filterable
     protected $predefinedFilterClasses = [
         PredefinedFilters\Basic::class
     ];
-    /** @var string */
+    /** @var string|callable */
     protected $errorTemplate = self::DEFAULT_ERROR;
-    /** @var string */
+    /** @var string|callable */
     protected $missingTemplate = self::DEFAULT_MISSING;
     /** @var Result */
     protected $lastResult;
 
     public function __construct(array $definition = [])
     {
-        if (isset($definition['errorTemplate'])) {
-            $this->errorTemplate = $definition['errorTemplate'];
-        }
-        if (isset($definition['missingTemplate'])) {
-            $this->missingTemplate = $definition['missingTemplate'];
-        }
-        foreach (['ruleClasses', 'filterClasses'] as $var) {
-            if (isset($definition[$var])) {
-                $accessor = 'predefined' . ucfirst($var);
-                foreach ($definition[$var] as $addClass) {
-                    array_push($this->{$accessor}, $addClass);
-                }
-                array_unique($this->{$accessor});
-            }
-        }
-        if (isset($definition['preFilters'])) {
-            $this->addFilters(Filterable::POSITION_PRE, $definition['preFilters']);
-        }
-        if (isset($definition['postFilters'])) {
-            $this->addFilters(Filterable::POSITION_POST, $definition['postFilters']);
-        }
-        if (isset($definition['attributes'])) {
-            $this->setAttributes($definition['attributes']);
-        } else {
-            $this->attributes = [];
-        }
+        $this->resolveTemplates($definition);
+        $this->resolveClassMap($definition);
+        $this->resolveFilters($definition);
+        $this->resolveAttributes($definition);
     }
 
     /**
@@ -322,6 +300,47 @@ class Profile extends Filterable
     public function check(array $data): bool
     {
         return !$this->run($data)->hasError();
+    }
+
+
+    protected function resolveTemplates(array $definition): void
+    {
+        if (isset($definition['errorTemplate'])) {
+            $this->errorTemplate = $definition['errorTemplate'];
+        }
+        if (isset($definition['missingTemplate'])) {
+            $this->missingTemplate = $definition['missingTemplate'];
+        }
+    }
+
+    protected function resolveClassMap(array $definition): void
+    {
+        foreach (['ruleClasses', 'filterClasses'] as $var) {
+            if (isset($definition[$var])) {
+                $accessor = 'predefined' . ucfirst($var);
+                foreach ($definition[$var] as $addClass) {
+                    array_push($this->{$accessor}, $addClass);
+                }
+                array_unique($this->{$accessor});
+            }
+        }
+    }
+
+    protected function resolveFilters(array $definition): void
+    {
+        if (isset($definition['preFilters'])) {
+            $this->addFilters(Filterable::POSITION_PRE, $definition['preFilters']);
+        }
+        if (isset($definition['postFilters'])) {
+            $this->addFilters(Filterable::POSITION_POST, $definition['postFilters']);
+        }
+    }
+
+    protected function resolveAttributes(array $definition): void
+    {
+        if (isset($definition['attributes'])) {
+            $this->setAttributes($definition['attributes']);
+        }
     }
 
 }
