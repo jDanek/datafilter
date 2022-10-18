@@ -2,6 +2,8 @@
 
 namespace DataFilter;
 
+use DataFilter\Util\Util;
+
 /**
  * Data attribute
  *
@@ -199,7 +201,17 @@ class Rule
             $error = $attrib->getDefaultErrorStr();
         }
         if (!$error) {
-            $error = $this->dataFilter->getErrorTemplate();
+            $error = $this->dataFilter->getError();
+            if (is_callable($error) || is_array($error)) {
+                if (is_array($error) && !method_exists($error[0], $error[1])) {
+                    throw new \InvalidArgumentException("Invalid callback definition");
+                }
+                $error = call_user_func_array($error, [
+                    $this->attribute->getName(),
+                    $this->name,
+                    $this->getLastValue(),
+                ]);
+            }
         }
         return Util::formatString($error, $formatData);
     }

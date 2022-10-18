@@ -2,6 +2,8 @@
 
 namespace DataFilter;
 
+use DataFilter\Util\Util;
+
 /**
  * Data attribute
  *

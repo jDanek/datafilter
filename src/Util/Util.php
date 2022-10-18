@@ -1,6 +1,6 @@
 <?php
 
-namespace DataFilter;
+namespace DataFilter\Util;
 
 /**
  * Utilities for data filter

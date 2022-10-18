@@ -2,6 +2,8 @@
 
 namespace DataFilter;
 
+use DataFilter\Util\Util;
+
 /**
  * Data attribute
  *
@@ -12,16 +14,16 @@ class Attribute extends Filterable
 
     /** @var array */
     protected static $DEFAULT_ATTRIBUTES = [
-        'required'       => false,
-        'matchAny'       => false,
-        'default'        => null,
-        'missing'        => null,
-        'error'          => null,
-        'rules'          => [],
-        'dependent'      => [],
+        'required' => false,
+        'matchAny' => false,
+        'default' => null,
+        'missing' => null,
+        'error' => null,
+        'rules' => [],
+        'dependent' => [],
         'dependentRegex' => [],
-        'preFilters'     => [],
-        'postFilters'    => [],
+        'preFilters' => [],
+        'postFilters' => [],
     ];
 
     /** @var Profile */
@@ -275,23 +277,19 @@ class Attribute extends Filterable
         $value = $this->failedRule->getLastValue();
 
         // process Closure
-        $errorTemplate = $this->dataFilter->getErrorTemplate();
-        if (is_callable($errorTemplate)) {
-            $response = call_user_func_array($errorTemplate, [
-                $name,
-                $ruleName,
-                $value,
-            ]);
-            $errorTemplate = $response;
+        $error = $this->dataFilter->getError($this->getError());
+        if (is_callable($error) || is_array($error)) {
+            if (is_array($error) && !method_exists($error[0], $error[1])) {
+                throw new \InvalidArgumentException("Invalid callback definition");
+            }
+            $error = call_user_func_array($error, [$name, $ruleName, $value]);
         }
 
-        $error = $this->getError() ?: $errorTemplate;
         return Util::formatString($error, [
             'attribute' => $name,
             'rule' => $ruleName,
             'value' => $value,
         ]);
-
     }
 
     /**
@@ -302,15 +300,14 @@ class Attribute extends Filterable
         $name = $this->name;
 
         // process Closure
-        $missingTemplate = $this->dataFilter->getMissingTemplate();
-        if (is_callable($missingTemplate)) {
-            $response = call_user_func_array($missingTemplate, [
-                $name
-            ]);
-            $missingTemplate = $response;
+        $missing = $this->dataFilter->getMissingTemplate($this->missing);
+        if (is_callable($missing) || is_array($missing)) {
+            if (is_array($missing) && !method_exists($missing[0], $missing[1])) {
+                throw new \InvalidArgumentException("Invalid callback definition");
+            }
+            $missing = call_user_func_array($missing, [$name]);
         }
 
-        $missing = $this->missing ?: $missingTemplate;
         return Util::formatString($missing, [
             'attribute' => $name,
         ]);

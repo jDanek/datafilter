@@ -176,6 +176,47 @@ class ErrorTest extends TestCase
         $this->assertEquals('From Profile', $errors['attrib2']);
     }
 
+    public function testErrorsCallback()
+    {
+        $df = new Profile([
+            'attributes' => [
+                'attrib1' => [
+                    'rules' => [
+                        'isNotX' => function ($in) {
+                            return $in === 'x';
+                        }
+                    ]
+                ],
+            ],
+            'errorTemplate' => function ($attribute, $rule, $val) {
+                return 'Failed attr:' . $attribute . ', rule:' . $rule . ', value:' . $val;
+            },
+        ]);
+        $res = $df->run(['attrib1' => 'foo']);
+
+        // get all
+        $errors = $res->getAllErrors();
+        $this->assertTrue(
+            array_key_exists('attrib1', $errors)
+            && count($errors) === 1
+        );
+        $this->assertEquals('Failed attr:attrib1, rule:isNotX, value:foo', $errors['attrib1']);
+
+        // get invalid
+        $errors = $res->getInvalidErrors();
+        $this->assertTrue(array_key_exists('attrib1', $errors) && count(array_keys($errors)) === 1);
+        $this->assertEquals('Failed attr:attrib1, rule:isNotX, value:foo', $errors['attrib1']);
+
+
+        // check all
+        $this->assertTrue($res->hasError());
+
+        // check single
+        $this->assertTrue($res->hasError('attrib1'));
+
+
+    }
+
 }
 
 
