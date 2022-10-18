@@ -64,14 +64,10 @@ class Attribute extends Filterable
         // no definition
         if (is_null($definition)) {
             // nothing
-        }
-
-        // required, simple
+        } // required, simple
         elseif (is_bool($definition)) {
             $this->required = $definition;
-        }
-
-        // complex..
+        } // complex..
         else {
 
             // from string or callable (simple, optional)
@@ -165,15 +161,11 @@ class Attribute extends Filterable
                 if ($this->matchAny || $rule->isSufficient()) {
                     return true;
                 }
-            }
-
-            // if not in match any mode -> first fail stops
+            } // if not in match any mode -> first fail stops
             elseif (!$this->matchAny) {
                 $this->failedRule = &$rule;
                 return false;
-            }
-
-            // at least one failed
+            } // at least one failed
             else {
                 if (!$anyFailed) {
                     $this->failedRule = &$rule;
@@ -201,8 +193,7 @@ class Attribute extends Filterable
         foreach ($this->dependent as $onInput => $requiredNames) {
             if ($onInput === '*') {
                 continue;
-            }
-            elseif ($input === $onInput) {
+            } elseif ($input === $onInput) {
                 $foundRequired = true;
                 foreach ($requiredNames as $attribName) {
                     $required[$attribName] = true;

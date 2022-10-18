@@ -12,12 +12,12 @@ use DataFilter\Util\Util;
 class Rule
 {
 
-    /** @var array  */
+    /** @var array */
     protected static $DEFAULT_ATTRIBUTES = [
         'sufficient' => false,
-        'skipEmpty'  => false,
+        'skipEmpty' => false,
         'constraint' => null,
-        'error'      => null,
+        'error' => null,
     ];
     /** @var Profile */
     protected $dataFilter;
@@ -33,7 +33,7 @@ class Rule
     protected $sufficient = false;
     /** @var bool */
     protected $skipEmpty = false;
-    /** @var bool  */
+    /** @var bool */
     protected $lazy = false;
 
     /**
@@ -44,7 +44,7 @@ class Rule
     protected $lastValue;
 
     /**
-     * @param mixed $definition  The rule definition
+     * @param mixed $definition The rule definition
      * @throws \InvalidArgumentException
      */
     public function __construct(string $name, $definition, Attribute $attribute, Profile $dataFilter)
@@ -56,15 +56,14 @@ class Rule
         if (is_array($definition) && isset($definition['lazy']) && $definition['lazy'] === true) {
             $this->lazy = $definition['lazy'];
             $this->definition = $definition;
-        }
-        else {
+        } else {
             $this->parseDefinition($definition);
         }
     }
 
     /**
      * The long description
-     * @param mixed  $definition  The rule definition
+     * @param mixed $definition The rule definition
      * @throws \InvalidArgumentException
      */
     protected function parseDefinition($definition = null)
@@ -91,8 +90,8 @@ class Rule
 
         // set attributes
         $this->sufficient = $definition['sufficient'];
-        $this->skipEmpty  = $definition['skipEmpty'];
-        $this->error      = $definition['error'];
+        $this->skipEmpty = $definition['skipEmpty'];
+        $this->error = $definition['error'];
 
         // having old style callable constraint
         if (is_callable($definition['constraint']) && is_array($definition['constraint'])) { // !($definition['constraint'] instanceof \Closure)) {
@@ -101,12 +100,10 @@ class Rule
                 $args = func_get_args();
                 return call_user_func_array($cb, $args);
             };
-        }
-
-        // from string -> check predefined
+        } // from string -> check predefined
         elseif (is_string($definition['constraint'])) {
             $args = preg_split('/:/', $definition['constraint']);
-            $method = 'rule'. array_shift($args);
+            $method = 'rule' . array_shift($args);
             $found = false;
             foreach ($this->dataFilter->getPredefinedRuleClasses() as $className) {
                 if (is_callable([$className, $method]) && method_exists($className, $method)) {

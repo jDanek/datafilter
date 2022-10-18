@@ -20,7 +20,7 @@ class Util
     public static function formatString(string $str, array $args): string
     {
         foreach ($args as $k => $v) {
-            $str = preg_replace('/:'. $k. ':/', $v, $str);
+            $str = preg_replace('/:' . $k . ':/', $v, $str);
         }
         return $str;
     }
@@ -35,11 +35,10 @@ class Util
 
             // is array -> flatten deeped
             if (is_array($value)) {
-                $flat = self::flatten($value, $flat, $prefix. $key. self::$FLATTEN_SEPARATOR);
-            }
-            // scalar -> use
+                $flat = self::flatten($value, $flat, $prefix . $key . self::$FLATTEN_SEPARATOR);
+            } // scalar -> use
             else {
-                $flat[$prefix. $key] = $value;
+                $flat[$prefix . $key] = $value;
             }
         }
         return $flat;

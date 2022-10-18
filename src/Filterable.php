@@ -10,16 +10,16 @@ abstract class Filterable
     public const POSITION_PRE = 'pre';
     public const POSITION_POST = 'post';
 
-    /** @var array  */
+    /** @var array */
     protected $preFilters = [];
-    /** @var array  */
+    /** @var array */
     protected $postFilters = [];
 
     /**
      * Add multiple filters at once
      *
      * @param string $position see Filterable::POSITION_*
-     * @param callable|array $filters   List of filters
+     * @param callable|array $filters List of filters
      *
      * @throws \InvalidArgumentException
      */
@@ -41,7 +41,7 @@ abstract class Filterable
         }
 
         // determine accessor
-        $accessor = $position. 'Filters';
+        $accessor = $position . 'Filters';
         if (!$this->{$accessor}) {
             $this->{$accessor} = [];
         }
@@ -52,14 +52,12 @@ abstract class Filterable
             // callable, not closure
             if (is_callable($filter) && is_array($filter)) { // && !($filter instanceof \Closure)) {
                 $cb = $filter;
-                $filter = function($in) use($cb) {
+                $filter = function ($in) use ($cb) {
                     return call_user_func_array($cb, [$in]);
                 };
-            }
-
-            // from string (predefined filter)
+            } // from string (predefined filter)
             elseif (is_string($filter)) {
-                $method = 'filter'. $filter;
+                $method = 'filter' . $filter;
                 $df = $this instanceof Profile ? $this : $this->dataFilter;
                 $foundFilter = false;
                 $args = $this instanceof Profile
@@ -75,9 +73,9 @@ abstract class Filterable
                 }
                 if (!$foundFilter) {
                     $filterName = $this instanceof Profile
-                        ? 'global '. $position. '-filter'
-                        : 'rule "'. $this->name. '", attribute "'. $this->attrib->getName(). '"'
-                            . ' as '. $position. '-filter';
+                        ? 'global ' . $position . '-filter'
+                        : 'rule "' . $this->name . '", attribute "' . $this->attrib->getName() . '"'
+                        . ' as ' . $position . '-filter';
 
                     throw new \InvalidArgumentException(sprintf(
                         "Could not use filter '%s' for '%s' because no predefined filter class found implementing '%s()'",
@@ -101,7 +99,7 @@ abstract class Filterable
                 $args = $this instanceof Profile
                     ? [null, $this]               // data filter
                     : [$this, $this->dataFilter]; // attribute
-                $filter =  call_user_func_array($filter, $args);
+                $filter = call_user_func_array($filter, $args);
             }
 
             // add filter
@@ -131,8 +129,8 @@ abstract class Filterable
     /**
      * Runs filter on input
      *
-     * @param string $position  see Filterable::POSITION_*
-     * @param string $input     The input
+     * @param string $position see Filterable::POSITION_*
+     * @param string $input The input
      *
      * @return string
      *
@@ -151,7 +149,7 @@ abstract class Filterable
         }
 
         // determine accessor
-        $accessor = $position. 'Filters';
+        $accessor = $position . 'Filters';
 
         if (!$this->{$accessor}) {
             return $input;

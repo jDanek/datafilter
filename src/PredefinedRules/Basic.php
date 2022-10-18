@@ -11,7 +11,7 @@ class Basic
     /**
      * Check for min length
      *
-     * @param int  $len  Minimal length
+     * @param int $len Minimal length
      *
      * @return callable
      */
@@ -25,7 +25,7 @@ class Basic
     /**
      * Check for max length
      *
-     * @param int  $len  Maximal length
+     * @param int $len Maximal length
      *
      * @return callable
      */
@@ -39,8 +39,8 @@ class Basic
     /**
      * Check for length range (min, max)
      *
-     * @param int  $min  Minimal length
-     * @param int  $max  Maximal length
+     * @param int $min Minimal length
+     * @param int $max Maximal length
      *
      * @return callable
      */
@@ -54,7 +54,7 @@ class Basic
     /**
      * Check regex against input
      *
-     * @param string  $regex  Name of the rule (unique per attribute)
+     * @param string $regex Name of the rule (unique per attribute)
      *
      * @return callable
      */
@@ -65,7 +65,7 @@ class Basic
 
         /*not in format "/../<modifier>", "#..#<modifier>"  nor "~..~<modifier>" */
         if (!preg_match('/^([\/#~]).+\1[msugex]*$/', $regex)) {
-            $regex = '/'. stripslashes($regex). '/';
+            $regex = '/' . stripslashes($regex) . '/';
         }
 
         return function ($input) use ($regex) {
@@ -76,7 +76,7 @@ class Basic
     /**
      * Check regex against input and returns reveresed result
      *
-     * @param string  $regex  Name of the rule (unique per attribute)
+     * @param string $regex Name of the rule (unique per attribute)
      *
      * @return callable
      */
@@ -87,7 +87,7 @@ class Basic
 
         /*not in format "/../<modifier>", "#..#<modifier>"  nor "~..~<modifier>" */
         if (!preg_match('/^([\/#~]).+\1[msugex]*$/', $regex)) {
-            $regex = '/'. stripslashes($regex). '/';
+            $regex = '/' . stripslashes($regex) . '/';
         }
 
         return function ($input) use ($regex) {
@@ -115,7 +115,7 @@ class Basic
     public static function ruleInt()
     {
         return function ($input) {
-            return function_exists('ctype_digit') ? ctype_digit(''. $input) : preg_match('/^[0-9]+$/', $input);
+            return function_exists('ctype_digit') ? ctype_digit('' . $input) : preg_match('/^[0-9]+$/', $input);
         };
     }
 
@@ -127,7 +127,7 @@ class Basic
     public static function ruleAlphanum()
     {
         return function ($input) {
-            return function_exists('ctype_alnum') ? ctype_alnum(''. $input) : preg_match('/^[0-9a-zA-Z]+$/', $input);
+            return function_exists('ctype_alnum') ? ctype_alnum('' . $input) : preg_match('/^[0-9a-zA-Z]+$/', $input);
         };
     }
 
@@ -157,12 +157,10 @@ class Basic
                 $date = date_parse($input);
                 if ($date['warning_count'] === 0 && $date['error_count'] === 0) {
                     return strlen($date['hour']) === 0;
-                }
-                else {
+                } else {
                     return false;
                 }
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 return false;
             }
         };
@@ -181,12 +179,10 @@ class Basic
                 $date = date_parse("2012-01-01 $input");
                 if ($date['warning_count'] === 0 && $date['error_count'] === 0) {
                     return strlen($date['hour']) > 0;
-                }
-                else {
+                } else {
                     return false;
                 }
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 return false;
             }
         };
@@ -204,8 +200,7 @@ class Basic
             try {
                 $date = date_parse($input);
                 return $date['warning_count'] === 0 && $date['error_count'] === 0;
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 return false;
             }
         };
@@ -247,9 +242,6 @@ class Basic
             return preg_match('/^[a-z0-9._%+-]+@(?:[a-z0-9-]+\.?)*[a-z0-9]+\.[a-z]{2,4}$/i', $input);
         };
     }
-
-
-
 
 
 }

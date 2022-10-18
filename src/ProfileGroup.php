@@ -8,7 +8,7 @@ namespace DataFilter;
 class ProfileGroup
 {
 
-    /** @var Profile[]  */
+    /** @var Profile[] */
     protected $profiles = [];
     /** @var string */
     protected $currentProfile;
@@ -24,8 +24,8 @@ class ProfileGroup
     /**
      * Add named profile
      *
-     * @param string $profileName  Name of the data filter profile
-     * @param mixed   $profileDefinition   Either profile definition or profile object
+     * @param string $profileName Name of the data filter profile
+     * @param mixed $profileDefinition Either profile definition or profile object
      */
     public function addProfile(string $profileName, $profileDefinition): void
     {
@@ -41,7 +41,7 @@ class ProfileGroup
     public function setProfile(string $profileName): void
     {
         if (!isset($this->profiles[$profileName])) {
-            throw new \InvalidArgumentException('Profile "'. $profileName. '" does not exist');
+            throw new \InvalidArgumentException('Profile "' . $profileName . '" does not exist');
         }
         $this->currentProfile = $profileName;
     }
@@ -63,7 +63,7 @@ class ProfileGroup
 
     /**
      * Runs check for data on last profile, returns bool
-     * @param string|null $profileName  Optional: profile name to use
+     * @param string|null $profileName Optional: profile name to use
      * @throws \InvalidArgumentException
      */
     public function check(array $data, ?string $profileName = null): bool

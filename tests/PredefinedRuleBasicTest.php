@@ -265,7 +265,6 @@ class PredefinedRuleBasicTest extends TestCase
         $this->assertFalse($df->check(['attrib1' => 'user@example..com']));
     }
 
-
     public function testPRBasicCustomRuleClass()
     {
         include_once __DIR__ . '/MyPredefinedRule.php';
@@ -284,8 +283,6 @@ class PredefinedRuleBasicTest extends TestCase
         $this->assertTrue($df->check(['attrib1' => 'ok']));
         $this->assertFalse($df->check(['attrib1' => 'other']));
     }
-
-
 }
 
 

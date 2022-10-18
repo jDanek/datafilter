@@ -12,19 +12,19 @@ use DataFilter\Util\Util;
 class Result
 {
 
-    /** @var Profile  */
+    /** @var Profile */
     protected $dataFilter;
-    /** @var array  */
+    /** @var array */
     protected $validAttributes = [];
-    /** @var array  */
+    /** @var array */
     protected $invalidAttributes = [];
-    /** @var array  */
+    /** @var array */
     protected $missingAttributes = [];
-    /** @var array  */
+    /** @var array */
     protected $unknownAttributes = [];
 
     /**
-     * @param Profile $dataFilter  Parental data filter
+     * @param Profile $dataFilter Parental data filter
      */
     public function __construct(Profile $dataFilter)
     {
@@ -35,12 +35,12 @@ class Result
      * Returns all validated attributes
      *
      * @return array
-     <code>
-     $res = [
-        'attribName' => (\DataFilter\Attribute)$obj,
-        // ..
-     ];
-     </code>
+     * <code>
+     * $res = [
+     * 'attribName' => (\DataFilter\Attribute)$obj,
+     * // ..
+     * ];
+     * </code>
      */
     public function getValidAttributes(): array
     {
@@ -56,12 +56,12 @@ class Result
      * Returns all validated data
      *
      * @return array
-     <code>
-     $res = [
-        'attribName' => 'The input data',
-        // ..
-     ];
-     </code>
+     * <code>
+     * $res = [
+     * 'attribName' => 'The input data',
+     * // ..
+     * ];
+     * </code>
      */
     public function getValidData(): array
     {
@@ -77,12 +77,12 @@ class Result
      * Returns all invalidated attributes
      *
      * @return array
-     <code>
-     $res = [
-        'attribName' => (\DataFilter\Attribute)$obj,
-        // ..
-     ];
-     </code>
+     * <code>
+     * $res = [
+     * 'attribName' => (\DataFilter\Attribute)$obj,
+     * // ..
+     * ];
+     * </code>
      */
     public function getInvalidAttributes(): array
     {
@@ -98,12 +98,12 @@ class Result
      * Returns all invalid input data
      *
      * @return array
-     <code>
-     $res = [
-        'attribName' => 'The input value',
-        // ..
-     ];
-     </code>
+     * <code>
+     * $res = [
+     * 'attribName' => 'The input value',
+     * // ..
+     * ];
+     * </code>
      */
     public function getInvalidData(): array
     {
@@ -119,12 +119,12 @@ class Result
      * Returns all errors for invalid attributes
      *
      * @return array
-     <code>
-     $res = [
-        'attribName' => 'The Error message',
-        // ..
-     ];
-     </code>
+     * <code>
+     * $res = [
+     * 'attribName' => 'The Error message',
+     * // ..
+     * ];
+     * </code>
      */
     public function getInvalidErrors(): array
     {
@@ -140,12 +140,12 @@ class Result
      * Returns all missing attributes
      *
      * @return array
-     <code>
-     $res = [
-        'attribName' => (\DataFilter\Attribute)$obj,
-        // ..
-     ];
-     </code>
+     * <code>
+     * $res = [
+     * 'attribName' => (\DataFilter\Attribute)$obj,
+     * // ..
+     * ];
+     * </code>
      */
     public function getMissingAttributes(): array
     {
@@ -161,12 +161,12 @@ class Result
      * Returns all missing error message
      *
      * @return array
-     <code>
-     $res = [
-        'attribName' => 'The error message'
-        // ..
-     ];
-     </code>
+     * <code>
+     * $res = [
+     * 'attribName' => 'The error message'
+     * // ..
+     * ];
+     * </code>
      */
     public function getMissingErrors(): array
     {
@@ -182,12 +182,12 @@ class Result
      * Returns combined missing an invalid error messages
      *
      * @return array
-     <code>
-     $res = [
-        'attribName' => 'The error message'
-        // ..
-     ];
-     </code>
+     * <code>
+     * $res = [
+     * 'attribName' => 'The error message'
+     * // ..
+     * ];
+     * </code>
      */
     public function getInvalidOrMissingErrors(): array
     {
@@ -204,12 +204,12 @@ class Result
      * Returns data of unknown input
      *
      * @return array
-     <code>
-     $res = [
-        'attribName' => 'The input data',
-        // ..
-     ];
-     </code>
+     * <code>
+     * $res = [
+     * 'attribName' => 'The input data',
+     * // ..
+     * ];
+     * </code>
      */
     public function getUnknownData(): array
     {
@@ -220,12 +220,12 @@ class Result
      * Returns data of all inputs (valid, invalid and unknown input)
      *
      * @return array
-     <code>
-     $res = [
-        'attribName' => 'The input data',
-        // ..
-     ];
-     </code>
+     * <code>
+     * $res = [
+     * 'attribName' => 'The input data',
+     * // ..
+     * ];
+     * </code>
      */
     public function getAllData(): array
     {
@@ -235,7 +235,7 @@ class Result
     /**
      * Returns attribute of named attribute if existing (either valid or invalid)
      *
-     * @param string $attribName  Name of the attrib
+     * @param string $attribName Name of the attrib
      *
      * @return Attribute
      */
@@ -243,8 +243,7 @@ class Result
     {
         if (isset($this->validAttributes[$attribName])) {
             return $this->validAttributes[$attribName]['attribute'];
-        }
-        elseif (isset($this->invalidAttributes[$attribName])) {
+        } elseif (isset($this->invalidAttributes[$attribName])) {
             return $this->invalidAttributes[$attribName]['attribute'];
         }
         return null;
@@ -258,11 +257,9 @@ class Result
     {
         if (isset($this->validAttributes[$attribName])) {
             return $this->validAttributes[$attribName]['value'];
-        }
-        elseif (isset($this->invalidAttributes[$attribName])) {
+        } elseif (isset($this->invalidAttributes[$attribName])) {
             return $this->invalidAttributes[$attribName]['value'];
-        }
-        elseif (isset($this->unknownAttributes[$attribName])) {
+        } elseif (isset($this->unknownAttributes[$attribName])) {
             return $this->unknownAttributes[$attribName];
         }
         return null;
@@ -285,12 +282,12 @@ class Result
      * Returns all errors (invalid + missing)
      *
      * @return array
-     <code>
-     $res = [
-        'attribName' => 'The error text',
-        // ..
-     ];
-     </code>
+     * <code>
+     * $res = [
+     * 'attribName' => 'The error text',
+     * // ..
+     * ];
+     * </code>
      */
     public function getAllErrors(): array
     {
@@ -301,18 +298,18 @@ class Result
      * Returns all error texts (no assoc)
      *
      * @return array|string
-     <code>
-     $res = [
-        'The error text',
-        // ..
-     ];
-     </code>
+     * <code>
+     * $res = [
+     * 'The error text',
+     * // ..
+     * ];
+     * </code>
      */
     public function getErrorTexts($join = null)
     {
         $errors = array_filter(
             array_merge(array_values($this->getInvalidErrors()), array_values($this->getMissingErrors())),
-            function($txt) {
+            function ($txt) {
                 return !is_null($txt);
             }
         );
@@ -325,12 +322,12 @@ class Result
      */
     public function check(array $data): bool
     {
-        $this->validAttributes   = [];
+        $this->validAttributes = [];
         $this->invalidAttributes = [];
         $this->missingAttributes = [];
         $this->unknownAttributes = [];
-        $requiredDependent    = [];
-        $seenAttrib           = [];
+        $requiredDependent = [];
+        $seenAttrib = [];
 
         foreach (Util::flatten($data) as $attributeName => $value) {
             $attribute = $this->dataFilter->getAttribute($attributeName);
@@ -339,9 +336,9 @@ class Result
                 $count = count($parts);
                 if ($count > 1) {
 
-                    for ($i = $count -1; $i >= 1; $i--) {
+                    for ($i = $count - 1; $i >= 1; $i--) {
                         $testName = implode(Util::$FLATTEN_SEPARATOR, array_splice($parts, 0, $i));
-                        $attribute   = $this->dataFilter->getAttribute($testName. Util::$FLATTEN_SEPARATOR. '*');
+                        $attribute = $this->dataFilter->getAttribute($testName . Util::$FLATTEN_SEPARATOR . '*');
                         if ($attribute) {
                             break;
                         }
@@ -364,7 +361,7 @@ class Result
             // successful check
             if ($attribute->check($value)) {
                 $this->validAttributes[$attributeName] = [
-                    'value'  => $attribute->useFilters()
+                    'value' => $attribute->useFilters()
                         ? $this->dataFilter->applyFilter(Filterable::POSITION_POST, $attribute->applyFilter(Filterable::POSITION_POST, $value))
                         : $value,
                     'attribute' => &$attribute
@@ -372,14 +369,12 @@ class Result
 
                 // determine possible dependents
                 $attribute->determineDependents($value, $requiredDependent);
-            }
-
-            // checks failed
+            } // checks failed
             else {
                 $this->invalidAttributes[$attributeName] = [
-                    'value'  => $value,
+                    'value' => $value,
                     'attribute' => &$attribute,
-                    'error'  => $attribute->getErrorText()
+                    'error' => $attribute->getErrorText()
                 ];
             }
         }
@@ -390,23 +385,19 @@ class Result
             // already seen
             if (isset($seenAttrib[$attributeName])) {
                 continue;
-            }
-
-            // has default
+            } // has default
             elseif (!is_null($default = $attribute->getDefault())) {
                 $this->validAttributes[$attributeName] = [
                     'value' => $default,
                     'attribute' => &$attribute
                 ];
-            }
-
-            // required -> missing
+            } // required -> missing
             elseif ($attribute->isRequired() || isset($requiredDependent[$attributeName])) {
                 $parts = explode(Util::$FLATTEN_SEPARATOR, $attributeName);
                 $count = count($parts);
-                if ($count > 1 && $parts[$count-1] === '*') {
+                if ($count > 1 && $parts[$count - 1] === '*') {
                     $before = implode(Util::$FLATTEN_SEPARATOR, array_splice($parts, 0, $count - 1)) . Util::$FLATTEN_SEPARATOR;
-                    $seen   = array_filter(array_keys($seenAttrib), function ($check) use ($before) {
+                    $seen = array_filter(array_keys($seenAttrib), function ($check) use ($before) {
                         return strpos($check, $before) === 0;
                     });
                     if (count($seen) > 0) {
@@ -415,7 +406,7 @@ class Result
                 }
                 $this->missingAttributes[$attributeName] = [
                     'attribute' => &$attribute,
-                    'error'  => $attribute->getMissingText()
+                    'error' => $attribute->getMissingText()
                 ];
             }
         }
