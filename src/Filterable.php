@@ -2,9 +2,6 @@
 
 namespace DataFilter;
 
-/**
- * Basic predefined validation rules
- */
 abstract class Filterable
 {
     public const POSITION_PRE = 'pre';

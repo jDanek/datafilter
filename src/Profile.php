@@ -144,11 +144,11 @@ class Profile extends Filterable
     protected $attributes = [];
     /** @var array */
     protected $predefinedRuleClasses = [
-        PredefinedRules\Basic::class
+        Predefined\Rule::class
     ];
     /** @var array */
     protected $predefinedFilterClasses = [
-        PredefinedFilters\Basic::class
+        Predefined\Filter::class
     ];
     /** @var string|callable */
     protected $errorTemplate = null;

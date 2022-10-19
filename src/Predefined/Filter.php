@@ -1,11 +1,8 @@
 <?php
 
-namespace DataFilter\PredefinedFilters;
+namespace DataFilter\Predefined;
 
-/**
- * Basic predefined filters
- */
-class Basic
+class Filter
 {
 
     public static function filterTrim(): callable

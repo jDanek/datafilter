@@ -1,11 +1,8 @@
 <?php
 
-namespace DataFilter\PredefinedRules;
+namespace DataFilter\Predefined;
 
-/**
- * Basic predefined validation rules
- */
-class Basic
+class Rule
 {
 
     /**
