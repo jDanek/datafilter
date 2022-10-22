@@ -193,24 +193,38 @@ class Rule
         if ($attrib) {
             $formatData['attribute'] = $attrib->getName();
         }
+
         $error = $this->error;
+        $error = $this->errorCallback($error);
+
         if (!$error && $attrib) {
             $error = $attrib->getDefaultErrorStr();
         }
+
         if (!$error) {
-            $error = $this->dataFilter->getError();
-            if (is_callable($error) || is_array($error)) {
-                if (is_array($error) && !method_exists($error[0], $error[1])) {
-                    throw new \InvalidArgumentException("Invalid callback definition");
-                }
-                $error = call_user_func_array($error, [
-                    $this->attribute->getName(),
-                    $this->name,
-                    $this->getLastValue(),
-                ]);
-            }
+            $error = $this->dataFilter->getErrorTemplate();
+            $error = $this->errorCallback($error);
         }
         return Util::formatString($error, $formatData);
+    }
+
+    /**
+     * Handling the callback, if the error is callable.
+     * Otherwise, it returns the original value.
+     */
+    protected function errorCallback($error)
+    {
+        if (is_callable($error) || is_array($error)) {
+            if (is_array($error) && !method_exists($error[0], $error[1])) {
+                throw new \InvalidArgumentException("Invalid callback definition");
+            }
+            $error = call_user_func_array($error, [
+                $this->attribute->getName(),
+                $this->name,
+                $this->getLastValue(),
+            ]);
+        }
+        return $error;
     }
 
 }

@@ -64,6 +64,62 @@ class ErrorTest extends TestCase
         $this->assertEquals('Oops, attrib2 not X:We are missing attrib1', $res->getErrorTexts(':'));
     }
 
+    public function testAttribOverwriteErrorCallback()
+    {
+        $df = new Profile([
+            'attributes' => [
+                'attrib1' => [
+                    'required' => true,
+                    'missing' => 'We are missing :attribute:'
+                ],
+                'attrib2' => [
+                    'rules' => [
+                        'isNotX' => [
+                            'constraint' => function ($in) {
+                                return 'x' === $in;
+                            },
+                            'error' => function ($attribute, $rule, $value) {
+                                return "Attribute: $attribute, rule: $rule, value: $value";
+                            }
+                        ]
+                    ]
+                ]
+            ],
+            'missingTemplate' => 'Missing :attribute:',
+            'errorTemplate' => 'Failed :attribute:',
+        ]);
+        $res = $df->run(['attrib2' => 'foo']);
+        $this->assertEquals('Attribute: attrib2, rule: isNotX, value: foo:We are missing attrib1', $res->getErrorTexts(':'));
+    }
+
+    public function testAttribOverwriteTemplateCallback()
+    {
+        $df = new Profile([
+            'attributes' => [
+                'attrib1' => [
+                    'required' => true,
+                ],
+                'attrib2' => [
+                    'rules' => [
+                        'isNotX' => [
+                            'constraint' => function ($in) {
+                                return 'x' === $in;
+                            }
+                        ]
+                    ]
+                ]
+            ],
+            'missingTemplate' => function ($attribute) {
+                return "Missing attribute: $attribute";
+            },
+            'errorTemplate' => function ($attribute, $rule, $value) {
+                return "Attribute: $attribute, rule: $rule, value: $value";
+            },
+        ]);
+        $res = $df->run(['attrib2' => 'foo']);
+        $this->assertEquals('Attribute: attrib2, rule: isNotX, value: foo:Missing attribute: attrib1', $res->getErrorTexts(':'));
+    }
+
     public function testErrorsByAttrib()
     {
         $df = new Profile([

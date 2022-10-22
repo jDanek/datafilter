@@ -268,7 +268,7 @@ class Attribute extends Filterable
         $value = $this->failedRule->getLastValue();
 
         // process Closure
-        $error = $this->dataFilter->getError($this->getError());
+        $error = $this->getError() ?? $this->dataFilter->getErrorTemplate();
         if (is_callable($error) || is_array($error)) {
             if (is_array($error) && !method_exists($error[0], $error[1])) {
                 throw new \InvalidArgumentException("Invalid callback definition");
@@ -291,7 +291,7 @@ class Attribute extends Filterable
         $name = $this->name;
 
         // process Closure
-        $missing = $this->dataFilter->getMissingTemplate($this->missing);
+        $missing = $this->missing ?? $this->dataFilter->getMissingTemplate();
         if (is_callable($missing) || is_array($missing)) {
             if (is_array($missing) && !method_exists($missing[0], $missing[1])) {
                 throw new \InvalidArgumentException("Invalid callback definition");

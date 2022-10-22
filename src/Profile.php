@@ -151,9 +151,9 @@ class Profile extends Filterable
         Predefined\Filter::class
     ];
     /** @var string|callable */
-    protected $errorTemplate = null;
+    protected $errorTemplate = self::DEFAULT_ERROR;
     /** @var string|callable */
-    protected $missingTemplate = null;
+    protected $missingTemplate = self::DEFAULT_MISSING;
     /** @var Result */
     protected $lastResult;
 
@@ -262,18 +262,18 @@ class Profile extends Filterable
      * Returns default error template
      * @return string|callable
      */
-    public function getError(string $default = null)
+    public function getErrorTemplate()
     {
-        return $this->errorTemplate ?? $default ?? self::DEFAULT_ERROR;
+        return $this->errorTemplate;
     }
 
     /**
      * Returns default missing template
      * @return string|callable
      */
-    public function getMissingTemplate(string $default = null)
+    public function getMissingTemplate()
     {
-        return $this->missingTemplate ?? $default ?? self::DEFAULT_MISSING;
+        return $this->missingTemplate;
     }
 
     /**
