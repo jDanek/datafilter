@@ -2,7 +2,7 @@
 
 namespace DataFilter;
 
-use \DataFilter\Util as U;
+use DataFilter\Util\Util;
 use PHPUnit\Framework\TestCase;
 
 class DataTest extends TestCase
@@ -44,7 +44,7 @@ class DataTest extends TestCase
 
     public function testMultiLevel2()
     {
-        U::$FLATTEN_SEPARATOR = '::';
+        Util::$FLATTEN_SEPARATOR = '::';
         $df = new Profile([
             'attributes' => [
                 'level1' => false,

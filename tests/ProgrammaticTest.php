@@ -25,7 +25,7 @@ class ProgrammaticTest extends TestCase
         $this->assertTrue($df->check(['attrib1' => 'foo']));
 
         // add rule
-        $df->getAttribute('attrib1')->setRule('minLength', 'LenMin:5');
+        $df->getAttribute('attrib1')->setRule('minLength', 'LengthMin:5');
         $this->assertFalse($df->check(['attrib1' => 'foo']));
         $this->assertTrue($df->check(['attrib1' => 'foobar']));
 
