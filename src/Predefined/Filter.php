@@ -24,41 +24,14 @@ class Filter
     }
 
     /**
-     * Transforms input into a URL-usable string.. "Bla {blub}" -> "bla-blub"
-     */
-    public static function filterUrlPart(): callable
-    {
-        return function ($input) {
-            return
-                preg_replace('/(?:^\-+|\-+$)/', '',     // tailing|leading "-"
-                    preg_replace('/\-\-+/', '-',             // more than one "-"
-                        preg_replace('/[^a-z0-9\-_\.~]/u', '-',  // strip not allowed chars
-                            strtolower($input))
-                    ));
-        };
-    }
-
-    /**
-     * Transforms input into a URL-usable string.. "Bla {blub}" -> "bla-blub" (unicode characters allowed)
-     */
-    public static function filterUrlPartUnicode(): callable
-    {
-        return function ($input) {
-            return
-                preg_replace('/(?:^\-+|\-+$)/', '',       // tailing|leading "-"
-                    preg_replace('/\-\-+/', '-',               // more than one "-"
-                        preg_replace('/[^\p{L}0-9\-_\.~]/u', '-',  // strip not allowed chars
-                            strtolower($input))
-                    ));
-        };
-    }
-
-    /**
      * Transforms input into a lowercase string
      */
-    public static function filterLowercase(): callable
+    public static function filterLowercase($encoding = 'utf-8'): callable
     {
-        return function ($input) {
+        return function ($input) use ($encoding) {
+            if (function_exists('mb_strtolower')) {
+                return mb_strtolower($input, $encoding);
+            }
             return strtolower($input);
         };
     }
@@ -66,11 +39,28 @@ class Filter
     /**
      * Transforms input into a uppercase string
      */
-    public static function filterUppercase(): callable
+    public static function filterUppercase($encoding = 'utf-8'): callable
     {
-        return function ($input) {
+        return function ($input) use ($encoding) {
+            if (function_exists('mb_strtoupper')) {
+                return mb_strtoupper($input, $encoding);
+            }
             return strtoupper($input);
         };
     }
 
+    /**
+     * Converts the input to a string starting with a capital letter
+     */
+    public static function filterUcFirst($multibyte = false, $encoding = 'utf-8'): callable
+    {
+        return function ($input) use ($multibyte, $encoding) {
+            if ($multibyte) {
+                $firstChar = mb_substr($input, 0, 1, $encoding);
+                $then = mb_substr($input, 1, null, $encoding);
+                return mb_strtoupper($firstChar, $encoding) . $then;
+            }
+            return ucfirst($input);
+        };
+    }
 }
