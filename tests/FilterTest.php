@@ -36,7 +36,6 @@ class FilterTest extends TestCase
         );
     }
 
-
     public function testAttribFilters()
     {
         $df = new Profile([
@@ -74,7 +73,6 @@ class FilterTest extends TestCase
         );
     }
 
-
     public function testPFBasicTrim()
     {
         $df = new Profile([
@@ -87,41 +85,6 @@ class FilterTest extends TestCase
         $data = $res->getValidData();
         $this->assertTrue(isset($data['attrib1']));
         $this->assertEquals('ok', $data['attrib1']);
-    }
-
-
-    public function testPFBasicUrlPart()
-    {
-        $df = new Profile([
-            'attributes' => [
-                'attrib1' => true
-            ],
-            'preFilters' => ['UrlPart']
-        ]);
-        $res = $df->run(['attrib1' => 'HelloThere']);
-        $data = $res->getValidData();
-        $this->assertTrue(isset($data['attrib1']));
-        $this->assertEquals('hellothere', $data['attrib1']);
-
-        $res = $df->run(['attrib1' => 'What are you doing?']);
-        $data = $res->getValidData();
-        $this->assertTrue(isset($data['attrib1']));
-        $this->assertEquals('what-are-you-doing', $data['attrib1']);
-    }
-
-
-    public function testPFBasicUrlPartUnicode()
-    {
-        $df = new Profile([
-            'attributes' => [
-                'attrib1' => true
-            ],
-            'preFilters' => ['UrlPartUnicode'],
-        ]);
-        $res = $df->run(['attrib1' => '&&xجx']);
-        $data = $res->getValidData();
-        $this->assertTrue(isset($data['attrib1']));
-        $this->assertEquals('xجx', $data['attrib1']);
     }
 
     public function testCustomFilter1()
@@ -159,7 +122,6 @@ class FilterTest extends TestCase
         $this->assertTrue(isset($data['attrib1']));
         $this->assertEquals('>[howdy]<', $data['attrib1']);
     }
-
 
 }
 
